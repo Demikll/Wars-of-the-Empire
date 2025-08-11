@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="ru">
     <head>
       <meta charset="UTF-8">
@@ -1454,7 +1454,7 @@
       <div class="command-card">
         <h4>ooc - Общий чат</h4>
         <p>Используется для не ролевого общения на весь сервер. Здесь можно обсуждать технические вопросы, спрашивать совета или просто общаться вне роли.</p>
-        <div class="command-example">// Всем привет</div>
+        <div class="command-example">
         <p class="command-note">Не используйте OOC чат для ролевой информации и не спамьте. Все сообщения должны быть на русском языке.</p>
       </div>
 
@@ -2566,8 +2566,6 @@
         </div>
       </div>
 
-    
-
       <div class="content-section">
         <h2>Система званий</h2>
         <div class="info-card">
@@ -3507,12 +3505,10 @@
     document.addEventListener('DOMContentLoaded', function () {
       createStarfield();
 
-      // Изначально скрываем группы меню
       document.getElementById('newbiesItems').classList.add('collapsed');
       document.getElementById('formationsItems').classList.add('collapsed');
       document.getElementById('docsItems').classList.add('collapsed');
 
-      // Для анимации шагов академии
       const steps = document.querySelectorAll('.step');
       steps.forEach(step => {
         step.style.opacity = '0';
@@ -3565,7 +3561,6 @@
       openMenuBtn.style.display = 'none';
     });
 
-    // Навигация по вкладкам в боковом меню
     document.querySelectorAll('.sidebar-menu li[data-tab]').forEach(item => {
       item.addEventListener('click', () => {
         document.querySelectorAll('.sidebar-menu li').forEach(i => i.classList.remove('active'));
@@ -3582,8 +3577,6 @@
       });
     });
 
-
-    // Обработчики разворачивания меню-групп
     document.getElementById('newbiesHeader').addEventListener('click', function () {
       const items = document.getElementById('newbiesItems');
       const arrow = this.querySelector('.menu-arrow');
@@ -3605,7 +3598,6 @@
       arrow.style.transform = items.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
     });
 
-    // Новый обработчик для Лор
     document.getElementById('lorHeader').addEventListener('click', function () {
       const items = document.getElementById('lorItems');
       const arrow = this.querySelector('.menu-arrow');
@@ -3613,7 +3605,6 @@
       arrow.style.transform = items.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
     });
 
-    // Навигация по вкладкам в боковом меню
     document.querySelectorAll('.sidebar-menu li[data-tab]').forEach(item => {
       item.addEventListener('click', () => {
         document.querySelectorAll('.sidebar-menu li').forEach(i => i.classList.remove('active'));
@@ -3630,7 +3621,6 @@
       });
     });
 
-    // Управление разворачиванием специальных разделов (глобальные специализации)
     document.querySelectorAll('.specialization-header').forEach(header => {
       header.addEventListener('click', function () {
         const content = this.nextElementSibling;
@@ -3640,7 +3630,6 @@
       });
     });
 
-    // Новый обработчик для раскрытия специализаций штурмовиков
     document.querySelectorAll('.trooper-header').forEach(header => {
       header.addEventListener('click', function () {
         const content = this.nextElementSibling;
@@ -3650,7 +3639,6 @@
       });
     });
 
-    // При загрузке страницы закрываем все специализации
     document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('.specialization-content').forEach(content => {
         content.classList.remove('expanded');
@@ -3658,7 +3646,7 @@
       document.querySelectorAll('.specialization-arrow').forEach(arrow => {
         arrow.style.transform = 'rotate(0deg)';
       });
-      // Закрываем все trooper-content
+
       document.querySelectorAll('.trooper-content').forEach(content => {
         content.classList.remove('expanded');
       });
@@ -3667,7 +3655,6 @@
       });
     });
 
-    // Навигация внутри регламентов
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', function () {
         document.querySelectorAll('.nav-item').forEach(el => {
@@ -3687,7 +3674,6 @@
       });
     });
 
-    // Инициализация: кликать по первому nav-item, если найден
     document.addEventListener('DOMContentLoaded', function () {
       const firstNavItem = document.querySelector('.nav-item');
       if (firstNavItem) {
@@ -3695,7 +3681,6 @@
       }
     });
 
-    // Поведение для карточек переобучения в академии
     const retrainingCards = document.querySelectorAll('.retraining-card');
     retrainingCards.forEach(card => {
       card.addEventListener('click', function () {
