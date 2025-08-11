@@ -1,0 +1,3708 @@
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Wars of the Empire - Star Wars RP</title>
+      <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=9_k1cWnQeyOXojmtrp1hEhuDFbmWrNKUqgeEV8ChVdLKfKbJ3KA22PcwMf7BAbTUoQnGifOGP2QUKjB3n2CN3XsaLZQPPC2tfk6b_qQ47DK1ymsdNesvbzwa84ZkTVpYxb7lEg7Hr2pHkBNrDjGFlOIBgqFqCEOD3vbm7u4t0K3EMSrLEYb-QnzsYc2FnJW-wlWXRp6yNT1eD56fyj6Q9ocDnQUx2qThJ4vrH5vvaR9pLO03_cYNkbjS-BZGvmvcAZcaYDMLJzKKqCfQVJnWeg" charset="UTF-8"></script><style>
+        :root {
+          --imperial-red: #e62429;
+          --imperial-dark: #0a0a0a;
+          --imperial-gray: #202020;
+          --imperial-light: #f0f0f0;
+          --imperial-blue: #4a90e2;
+          --sidebar-width: 280px;
+          --sidebar-collapsed: 70px;
+          --sidebar-hidden: 0px;
+          --content-max-width: 1200px;
+        }
+
+        * { 
+          box-sizing: border-box; 
+          transition: all 0.3s ease; 
+        }
+
+        body {
+          font-family: 'Roboto', sans-serif;
+          margin: 0; 
+          padding: 0;
+          background-color: var(--imperial-dark);
+          color: var(--imperial-light);
+          display: flex; 
+          min-height: 100vh;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        .starfield {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -2;
+          background: 
+            radial-gradient(ellipse at 20% 20%, rgba(27, 39, 53, 0.9) 0%, transparent 70%),
+            radial-gradient(ellipse at 60% 80%, rgba(69, 39, 89, 0.8) 0%, transparent 70%),
+            radial-gradient(ellipse at 80% 30%, rgba(9, 10, 15, 0.9) 0%, transparent 70%),
+            linear-gradient(to bottom, #090A0F 0%, #1B2735 100%);
+          overflow: hidden;
+        }
+
+        .star {
+          position: absolute;
+          background: #fff;
+          border-radius: 50%;
+          animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.2; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .nebula {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(30px);
+          opacity: 0.3;
+          animation: drift linear infinite;
+        }
+
+        @keyframes drift {
+          0% { transform: translate(0, 0); }
+          100% { transform: translate(var(--drift-x), var(--drift-y)); }
+        }
+
+        .sidebar {
+          width: var(--sidebar-width);
+          background-color: rgba(20,20,20,0.95);
+          padding: 20px 0;
+          box-shadow: 2px 0 15px rgba(0,0,0,0.9);
+          position: fixed; 
+          height: 100vh; 
+          overflow-y: auto; 
+          z-index:100;
+          backdrop-filter: blur(8px);
+          border-right: 2px solid var(--imperial-red);
+        }
+
+        .sidebar.collapsed { 
+          width: var(--sidebar-collapsed); 
+        }
+
+        .sidebar.hidden { 
+          width: var(--sidebar-hidden); 
+          overflow: hidden; 
+          border-right: none; 
+        }
+
+        .sidebar.hidden .sidebar-header,
+        .sidebar.hidden .menu-text,
+        .sidebar.hidden .menu-arrow,
+        .sidebar.hidden .menu-group-header,
+        .sidebar.hidden .menu-group-items { 
+          display: none; 
+        }
+
+        .sidebar.collapsed .menu-text,
+        .sidebar.collapsed .menu-arrow,
+        .sidebar.collapsed .sidebar-header h1 { 
+          display: none; 
+        }
+
+        .sidebar-header {
+          padding: 0 20px 20px; 
+          border-bottom:2px solid var(--imperial-red);
+          margin-bottom:20px; 
+          display:flex; 
+          align-items:center; 
+          justify-content:space-between;
+        }
+
+        .sidebar-header h1 {
+          font-family: 'Orbitron', sans-serif;
+          color: var(--imperial-red); 
+          margin:0; 
+          font-size:1.5em;
+          text-transform:uppercase; 
+          letter-spacing:2px; 
+          font-weight:700;
+          text-shadow:0 0 10px rgba(230,36,41,0.5);
+        }
+
+        .toggle-btn {
+          background:none; 
+          border:none; 
+          color:var(--imperial-light);
+          font-size:1.2em; 
+          cursor:pointer; 
+          padding:5px;
+        }
+
+        .toggle-btn:hover { 
+          color: var(--imperial-red); 
+          transform:scale(1.1); 
+        }
+
+        .sidebar-menu { 
+          list-style:none; 
+          padding:0; 
+          margin:0; 
+        }
+
+        .menu-group { 
+          margin-bottom:15px; 
+          width:100%; 
+        }
+
+        .menu-group-header {
+          display:flex; 
+          align-items:center; 
+          justify-content:space-between;
+          padding:15px 20px; 
+          cursor:pointer; 
+          color:var(--imperial-light);
+          font-weight:600; 
+          text-transform:uppercase; 
+          font-size:0.9em; 
+          letter-spacing:1px;
+          border-left:4px solid transparent;
+        }
+
+        .menu-group-header:hover {
+          background-color:rgba(230,36,41,0.2); 
+          border-left:4px solid var(--imperial-red);
+          color:#fff;
+        }
+
+        .menu-arrow { 
+          transition: transform 0.3s ease; 
+        }
+
+        .menu-group-items {
+          overflow:hidden; 
+          max-height:1000px; 
+          transition:max-height 0.3s ease; 
+          width:100%;
+        }
+
+        .menu-group-items.collapsed { 
+          max-height:0; 
+        }
+
+        .sidebar-menu li {
+          padding:12px 20px; 
+          border-left:3px solid transparent; 
+          transition:all 0.3s;
+          position:relative; 
+          width:100%;
+        }
+
+        .sidebar-menu li:hover { 
+          background:rgba(230,36,41,0.15); 
+          border-left:3px solid var(--imperial-red); 
+        }
+
+        .sidebar-menu li.active { 
+          background:rgba(230,36,41,0.25); 
+          border-left:3px solid var(--imperial-red); 
+        }
+
+        .sidebar-menu a { 
+          color:var(--imperial-light); 
+          text-decoration:none; 
+          display:flex; 
+          align-items:center; 
+          width:100%; 
+        }
+
+        .sidebar-menu i { 
+          margin-right:15px; 
+          font-size:1.1em; 
+          min-width:20px; 
+          text-align:center; 
+        }
+
+        .main-content {
+          flex:1; 
+          margin-left:var(--sidebar-width);
+          margin-right: auto;
+          margin-left: auto;
+          padding:30px 40px; 
+          background:rgba(10,10,10,0.85);
+          backdrop-filter:blur(5px); 
+          max-width:var(--content-max-width);
+          transition:margin-left 0.3s ease; 
+          z-index:1;
+          min-height: 100vh;
+        }
+
+        .sidebar.collapsed ~ .main-content { 
+          margin-left: var(--sidebar-collapsed);
+          margin-right: auto;
+        }
+
+        .sidebar.hidden ~ .main-content { 
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .content-wrapper {
+          max-width: var(--content-max-width);
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        .open-menu-btn {
+          position: fixed; 
+          left:10px; 
+          top:10px;
+          background: rgba(20,20,20,0.9); 
+          border:none; 
+          color:var(--imperial-light);
+          font-size:1.5em; 
+          width:40px; 
+          height:40px; 
+          border-radius:50%;
+          cursor:pointer; 
+          z-index:99; 
+          display:none;
+          justify-content:center; 
+          align-items:center;
+          box-shadow:0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .open-menu-btn:hover { 
+          background: var(--imperial-red); 
+          transform:scale(1.1); 
+        }
+
+        .page-header {
+          border-bottom:2px solid var(--imperial-red);
+          padding-bottom:15px; 
+          margin-bottom:30px;
+          display:flex; 
+          justify-content:center; 
+          align-items:center;
+          text-align:center;
+        }
+
+        .page-header h1 {
+          font-family: 'Orbitron', sans-serif;
+          color:var(--imperial-red); 
+          margin:0; 
+          font-size:3em;
+          text-transform:uppercase; 
+          letter-spacing:5px; 
+          font-weight:700;
+          text-shadow:0 0 15px rgba(230,36,41,0.7); 
+          position:relative;
+        }
+
+        .page-header h1::after {
+          content:''; 
+          position:absolute; 
+          bottom:-15px; 
+          left:50%;
+          transform:translateX(-50%); 
+          width:100px; 
+          height:3px;
+          background:var(--imperial-red); 
+          box-shadow:0 0 10px rgba(230,36,41,0.7);
+        }
+
+        .tab-content { 
+          display:none; 
+        }
+
+        .tab-content.active { 
+          display:block; 
+          animation:fadeIn 0.5s; 
+        }
+
+        @keyframes fadeIn { 
+          from { opacity:0; } 
+          to { opacity:1; } 
+        }
+
+        .content-section {
+          margin-bottom:40px; 
+          background:rgba(20,20,20,0.9);
+          padding:30px; 
+          border-radius:8px; 
+          border-left:4px solid var(--imperial-red);
+          box-shadow:0 5px 20px rgba(0,0,0,0.5); 
+          backdrop-filter:blur(5px);
+          max-width:100%;
+        }
+
+        h2 {
+          color:var(--imperial-light); 
+          font-size:2em; 
+          margin-top:0;
+          border-bottom:1px solid var(--imperial-gray); 
+          padding-bottom:10px;
+          font-weight:600; 
+          letter-spacing:1px; 
+          text-transform:uppercase;
+        }
+
+        h3 {
+          color:var(--imperial-red); 
+          font-size:1.5em; 
+          margin-top:0;
+          font-weight:600; 
+          letter-spacing:1px;
+        }
+
+        .unit-section {
+          display:flex; 
+          align-items:center; 
+          margin-bottom:30px;
+          background:rgba(0,0,0,0.7); 
+          border-radius:8px; 
+          overflow:hidden;
+          box-shadow:0 5px 15px rgba(0,0,0,0.3); 
+          border-left:3px solid var(--imperial-red);
+        }
+
+        .unit-section:nth-child(even) { 
+          flex-direction:row-reverse; 
+        }
+
+        .unit-image { 
+          flex:1; 
+          padding:20px; 
+          min-width:300px; 
+        }
+
+        .unit-image img {
+          width:100%; 
+          border-radius:5px; 
+          border:1px solid var(--imperial-gray);
+          box-shadow:0 5px 15px rgba(0,0,0,0.5); 
+          transition:transform 0.3s;
+        }
+
+        .unit-image img:hover { 
+          transform:scale(1.03); 
+        }
+
+        .unit-description { 
+          flex:2; 
+          padding:20px; 
+        }
+
+        p, ul { 
+          line-height:1.6; 
+        }
+
+        ul { 
+          padding-left:20px; 
+        }
+
+        li { 
+          margin-bottom:8px; 
+        }
+
+        .footer {
+          text-align:center; 
+          padding:20px; 
+          border-top:1px solid var(--imperial-gray);
+          margin-top:40px; 
+          font-size:0.9em; 
+          background:rgba(20,20,20,0.9);
+          border-radius:5px; 
+          letter-spacing:1px;
+        }
+
+        .info-card {
+          background: rgba(30,30,30,0.7);
+          border-radius: 5px;
+          padding: 20px;
+          margin-bottom: 20px;
+          border-left: 3px solid var(--imperial-red);
+          box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .info-card h3 {
+          color: var(--imperial-blue);
+          margin-top: 0;
+          padding-bottom: 10px;
+          border-bottom: 1px solid var(--imperial-gray);
+        }
+
+        .info-card ul {
+          padding-left: 20px;
+        }
+
+        .info-card li {
+          margin-bottom: 10px;
+          position: relative;
+          padding-left: 0px;
+        }
+
+  .info-card li:before {
+    display: none;
+  }
+
+        .command-card {
+          background: rgba(40,40,40,0.7);
+          border-radius: 5px;
+          padding: 15px;
+          margin-bottom: 15px;
+          border-left: 3px solid var(--imperial-blue);
+        }
+
+        .command-card h4 {
+          color: var(--imperial-light);
+          margin-top: 0;
+          margin-bottom: 10px;
+          font-size: 1.2em;
+        }
+
+        .command-card .command-example {
+          background: rgba(0,0,0,0.3);
+          padding: 8px 12px;
+          border-radius: 4px;
+          font-family: monospace;
+          display: inline-block;
+          margin: 5px 0;
+          color: #4fc3f7;
+        }
+
+        .command-card .command-note {
+          font-style: italic;
+          color: #b0bec5;
+          font-size: 0.9em;
+        }
+
+        .specialization-group {
+          margin-bottom: 20px;
+          background: rgba(30,30,30,0.7);
+          border-radius: 5px;
+          padding: 15px;
+          border-left: 3px solid var(--imperial-red);
+        }
+
+        .specialization-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          padding: 10px;
+          transition: background-color 0.3s ease;
+        }
+
+        .specialization-header:hover {
+          background-color: rgba(230,36,41,0.15);
+        }
+
+        .specialization-header h3 {
+          margin: 0;
+          color: var(--imperial-light);
+        }
+
+        .specialization-arrow {
+          transition: transform 0.2s ease;
+        }
+
+        .specialization-content {
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.2s ease;
+          color: var(--imperial-light);
+        }
+
+        .specialization-content.expanded {
+          max-height: 2000px;
+        }
+
+        .trooper-specialization {
+          margin-top: 20px;
+          background: rgba(40,40,40,0.7);
+          border-radius: 5px;
+          padding: 15px;
+          border-left: 3px solid var(--imperial-gray);
+        }
+
+        .trooper-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          padding: 8px 0;
+        }
+
+        .trooper-header h4 {
+          margin: 0;
+          color: var(--imperial-light);
+        }
+
+        .trooper-arrow {
+          transition: transform 0.2s ease;
+          font-size: 0.9em;
+        }
+
+        .trooper-content {
+          overflow: hidden;
+          max-height: 0;
+          transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          padding-left: 15px;
+          color: var(--imperial-light);
+          will-change: max-height;
+        }
+
+        .trooper-content.expanded {
+          max-height: 1000px;
+          transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .trooper-arrow {
+          transition: transform 0.3s ease;
+          font-size: 0.9em;
+        }
+
+        .subtitle {
+          color: #a0a0a0;
+          font-style: italic;
+          margin-bottom: 25px;
+        }
+
+        .regulations-nav {
+          display: flex;
+          background: rgba(30,30,30,0.8);
+          border-radius: 8px;
+          margin-bottom: 25px;
+          overflow: hidden;
+        }
+
+        .nav-item {
+          padding: 15px 20px;
+          cursor: pointer;
+          transition: all 0.3s;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+          background: rgba(230,36,41,0.1);
+        }
+
+        .nav-item.active {
+          border-bottom: 3px solid var(--imperial-red);
+          background: rgba(230,36,41,0.2);
+        }
+
+        .nav-item i {
+          font-size: 1.1em;
+        }
+
+        .regulation-section {
+          display: none;
+          animation: fadeIn 0.5s;
+        }
+
+        .regulation-section.active {
+          display: block;
+        }
+
+        .section-header {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 25px;
+        }
+
+        .section-header i {
+          font-size: 1.8em;
+          color: var(--imperial-red);
+        }
+
+        .section-header h3 {
+          margin: 0;
+          color: var(--imperial-light);
+        }
+
+        .info-card {
+          background: rgba(40,40,40,0.6);
+          border-left: 3px solid var(--imperial-blue);
+          padding: 15px 20px;
+          border-radius: 5px;
+          margin-bottom: 25px;
+        }
+
+        .defcon-levels {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .defcon-card {
+          background: rgba(30,30,30,0.8);
+          border-radius: 8px;
+          overflow: hidden;
+          transition: transform 0.3s;
+        }
+
+        .defcon-card:hover {
+          transform: translateY(-5px);
+        }
+
+        .defcon-header {
+          padding: 12px 20px;
+          display: flex;
+          justify-content: space-between;
+          font-weight: bold;
+          color: white;
+        }
+
+        .defcon-number {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 1.2em;
+        }
+
+        .defcon-status {
+          opacity: 0.9;
+        }
+
+        .defcon-body {
+          display: flex;
+          padding: 20px;
+          gap: 20px;
+        }
+
+        .defcon-icon {
+          font-size: 2em;
+          min-width: 50px;
+          text-align: center;
+          padding-top: 5px;
+        }
+
+        .defcon-desc p {
+          margin-top: 0;
+          margin-bottom: 10px;
+        }
+
+        .defcon-rules {
+          padding-left: 20px;
+          margin: 0;
+        }
+
+        .defcon-rules li {
+          margin-bottom: 8px;
+        }
+
+        .defcon-rules ul {
+          padding-left: 20px;
+          margin-top: 5px;
+        }
+
+        .defcon-card[data-level="5"] .defcon-header { background: #1a5276; }
+        .defcon-card[data-level="4"] .defcon-header { background: #2874a6; }
+        .defcon-card[data-level="3"] .defcon-header { background: #d35400; }
+        .defcon-card[data-level="2"] .defcon-header { background: #a93226; }
+        .defcon-card[data-level="1"] .defcon-header { background: #641e16; }
+
+        .drill-concepts {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .concept-card {
+          background: rgba(50,50,50,0.5);
+          padding: 15px;
+          border-radius: 8px;
+          text-align: center;
+          border: 1px solid rgba(230,36,41,0.2);
+        }
+
+        .concept-icon {
+          font-size: 2em;
+          color: var(--imperial-red);
+          margin-bottom: 10px;
+        }
+
+        .concept-card h5 {
+          margin: 10px 0;
+          color: var(--imperial-light);
+        }
+
+        .rules-list {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .rule-item {
+          display: flex;
+          gap: 15px;
+          align-items: flex-start;
+        }
+
+        .rule-number {
+          background: var(--imperial-red);
+          color: white;
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9em;
+          flex-shrink: 0;
+        }
+
+        .command-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 15px;
+        }
+
+        .command-card {
+          background: rgba(60,60,60,0.5);
+          padding: 15px;
+          border-radius: 8px;
+          border-left: 3px solid var(--imperial-blue);
+        }
+
+        .command-name {
+          font-family: 'Orbitron', sans-serif;
+          color: var(--imperial-red);
+          margin-bottom: 8px;
+        }
+
+        .safety-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 15px;
+        }
+
+        .safety-item {
+          display: flex;
+          gap: 15px;
+          align-items: center;
+          padding: 10px;
+          background: rgba(50,50,50,0.3);
+          border-radius: 5px;
+        }
+
+        .safety-icon {
+          font-size: 1.5em;
+          color: var(--imperial-red);
+          min-width: 40px;
+          text-align: center;
+        }
+
+        .punishment-list {
+          list-style-type: none;
+          padding-left: 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .punishment-list li {
+          background: rgba(150,0,0,0.3);
+          padding: 8px 15px;
+          border-radius: 20px;
+          font-size: 0.9em;
+        }
+
+        .appeal-cards {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 15px;
+          margin-bottom: 25px;
+        }
+
+        .appeal-card {
+          background: rgba(40,40,40,0.6);
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid rgba(230,36,41,0.3);
+        }
+
+        .appeal-question {
+          padding: 10px 15px;
+          background: rgba(230,36,41,0.2);
+          font-weight: bold;
+        }
+
+        .appeal-answer {
+          padding: 15px;
+          font-family: 'Orbitron', sans-serif;
+          color: var(--imperial-blue);
+          text-align: center;
+        }
+
+        .appeal-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 25px;
+        }
+
+        .appeal-table th, .appeal-table td {
+          padding: 12px 15px;
+          text-align: left;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .appeal-table th {
+          background: rgba(230,36,41,0.2);
+          color: var(--imperial-light);
+        }
+
+        .appeal-table tr:hover {
+          background: rgba(255,255,255,0.05);
+        }
+
+        .regulation-block {
+          background: rgba(40,40,40,0.6);
+          border-radius: 8px;
+          padding: 20px;
+          margin-bottom: 25px;
+          border-left: 3px solid var(--imperial-gray);
+        }
+
+        .regulation-block.warning {
+          border-left-color: #f39c12;
+          background: rgba(150,100,0,0.1);
+        }
+
+        .regulation-block.danger {
+          border-left-color: #e74c3c;
+          background: rgba(150,0,0,0.1);
+        }
+
+        .forbidden-list {
+          list-style-type: none;
+          padding-left: 0;
+        }
+
+        .forbidden-list li {
+          padding: 8px 0;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .forbidden-list li:last-child {
+          border-bottom: none;
+        }
+
+        .forbidden-list i {
+          color: var(--imperial-red);
+          min-width: 20px;
+        }
+
+        @media (max-width: 768px) {
+          .regulations-nav {
+            flex-direction: column;
+          }
+
+          .nav-item {
+            border-bottom: none;
+            border-left: 3px solid transparent;
+          }
+
+          .nav-item.active {
+            border-bottom: none;
+            border-left: 3px solid var(--imperial-red);
+          }
+
+          .defcon-body {
+            flex-direction: column;
+          }
+
+          .defcon-icon {
+            display: none;
+          }
+
+          .drill-concepts, .safety-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .academy-container {
+          display: flex;
+          flex-direction: column;
+          gap: 25px;
+        }
+
+        .academy-block {
+          border-radius: 10px;
+          padding: 25px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .academy-block.primary {
+          background: rgba(20,40,70,0.7);
+          border-left: 5px solid var(--imperial-blue);
+        }
+
+        .academy-block.secondary {
+          background: rgba(30,30,50,0.7);
+          border-left: 5px solid var(--imperial-gray);
+        }
+
+        .academy-block.accent {
+          background: rgba(70,30,30,0.7);
+          border-left: 5px solid var(--imperial-red);
+        }
+
+        .academy-header {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 20px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .academy-header i {
+          font-size: 1.8em;
+          color: var(--imperial-red);
+        }
+
+        .academy-header h3 {
+          margin: 0;
+          color: var(--imperial-light);
+        }
+
+        .academy-steps {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+          position: relative;
+          padding-left: 40px;
+        }
+
+        .academy-steps::before {
+          content: "";
+          position: absolute;
+          left: 20px;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: linear-gradient(to bottom, var(--imperial-red), var(--imperial-blue));
+        }
+
+        .step {
+          display: flex;
+          gap: 20px;
+          position: relative;
+        }
+
+        .step-number {
+          width: 40px;
+          height: 40px;
+          background: var(--imperial-red);
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          flex-shrink: 0;
+          position: absolute;
+          left: -50px;
+        }
+
+        .step-content {
+          background: rgba(0,0,0,0.3);
+          padding: 20px;
+          border-radius: 8px;
+          flex: 1;
+        }
+
+        .step-content h4 {
+          margin-top: 0;
+          color: var(--imperial-blue);
+          border-bottom: 1px dashed var(--imperial-gray);
+          padding-bottom: 10px;
+        }
+
+        .tag {
+          display: inline-block;
+          background: rgba(230,36,41,0.3);
+          padding: 3px 8px;
+          border-radius: 4px;
+          margin: 2px;
+          font-family: monospace;
+          font-size: 0.9em;
+        }
+
+        .status-blocks {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
+        }
+
+        .academy-content {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .warning-note {
+          background: rgba(150,50,0,0.3);
+          padding: 10px 15px;
+          border-left: 3px solid #f39c12;
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        }
+
+        .warning-note i {
+          color: #f39c12;
+          font-size: 1.5em;
+        }
+
+        .privileges, .requirements, .responsibilities {
+          background: rgba(0,0,0,0.2);
+          padding: 15px;
+          border-radius: 5px;
+        }
+
+        .privileges h5, .requirements h5, .responsibilities h5 {
+          color: var(--imperial-blue);
+          margin-top: 0;
+          margin-bottom: 10px;
+        }
+
+        .note {
+          background: rgba(0,0,0,0.2);
+          padding: 10px;
+          border-radius: 5px;
+          display: flex;
+          gap: 10px;
+          font-size: 0.9em;
+        }
+
+        .note i {
+          color: var(--imperial-blue);
+          font-size: 1.2em;
+        }
+
+        .retraining-types {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
+          margin-top: 20px;
+        }
+
+        .retraining-card {
+          background: rgba(0,0,0,0.3);
+          padding: 20px;
+          border-radius: 8px;
+          border: 1px solid rgba(230,36,41,0.2);
+        }
+
+        .retraining-card h4 {
+          margin-top: 0;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: var(--imperial-light);
+        }
+
+        .retraining-card h4 i {
+          color: var(--imperial-red);
+        }
+
+        .process {
+          background: rgba(0,0,0,0.4);
+          padding: 10px;
+          border-radius: 5px;
+          margin-top: 15px;
+          font-size: 0.9em;
+        }
+
+        .exam-block {
+          background: rgba(30,30,60,0.7);
+          padding: 25px;
+          border-radius: 10px;
+          border-left: 5px solid var(--imperial-blue);
+        }
+
+        .exam-header {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 20px;
+        }
+
+        .exam-header i {
+          font-size: 1.8em;
+          color: var(--imperial-red);
+        }
+
+        .exam-header h3 {
+          margin: 0;
+          color: var(--imperial-light);
+        }
+
+        .exam-system {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 30px;
+        }
+
+        .exam-criteria ul {
+          padding-left: 20px;
+        }
+
+        .exam-criteria li {
+          margin-bottom: 10px;
+          display: flex;
+          justify-content: space-between;
+          max-width: 300px;
+        }
+
+        .exam-results {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .result-card {
+          padding: 20px;
+          border-radius: 8px;
+          text-align: center;
+        }
+
+        .result-card.success {
+          background: rgba(0,100,0,0.3);
+          border: 1px solid #2ecc71;
+        }
+
+        .result-card.fail {
+          background: rgba(100,0,0,0.3);
+          border: 1px solid #e74c3c;
+        }
+
+        .result-card .score {
+          font-family: 'Orbitron', sans-serif;
+          font-size: 1.5em;
+          margin: 10px 0;
+          color: white;
+        }
+
+        @media (max-width: 992px) {
+          .exam-system {
+            grid-template-columns: 1fr;
+          }
+
+          .status-blocks {
+            grid-template-columns: 1fr;
+          }
+
+          .academy-steps {
+            padding-left: 30px;
+          }
+
+          .step-number {
+            left: -40px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .retraining-types {
+            grid-template-columns: 1fr;
+          }
+
+          .academy-steps::before {
+            left: 15px;
+          }
+
+          .step-number {
+            left: -35px;
+          }
+        }
+
+        @media (max-width:1200px) { 
+          .main-content { 
+            padding:20px; 
+          } 
+        }
+
+        @media (max-width:992px) {
+          .sidebar { 
+            width: var(--sidebar-collapsed); 
+          }
+          .sidebar .menu-text, 
+          .sidebar .menu-arrow, 
+          .sidebar .sidebar-header h1 { 
+            display:none; 
+          }
+          .main-content { 
+            margin-left:var(--sidebar-collapsed); 
+            padding:15px; 
+          }
+          .unit-section, 
+          .unit-section:nth-child(even) { 
+            flex-direction:column; 
+          }
+          .unit-image { 
+            width:100%; 
+            min-width:auto; 
+          }
+          .page-header h1 { 
+            font-size:2em; 
+          }
+        }
+
+        @media (max-width:768px) {
+          body { 
+            flex-direction:column; 
+          }
+          .sidebar {
+            width:100%; 
+            height:auto; 
+            position:relative; 
+            padding:10px 0;
+            overflow:visible;
+          }
+          .sidebar .menu-text, 
+          .sidebar .menu-arrow, 
+          .sidebar .sidebar-header h1 { 
+            display:block; 
+          }
+          .main-content { 
+            margin-left:0; 
+            padding:15px; 
+          }
+          .page-header h1 { 
+            font-size:1.8em; 
+            letter-spacing:3px; 
+          }
+        }
+      </style>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    </head>
+  <body>
+    <div class="starfield" id="starfield"></div>
+    <button class="open-menu-btn" id="openMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h1>Wars of the Empire</h1>
+        <button class="toggle-btn" id="toggleBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="active" data-tab="main">
+          <a href="#"><i class="fas fa-home"></i><span class="menu-text">Главное</span></a>
+        </li>
+        <div class="menu-group">
+          <div class="menu-group-header" id="newbiesHeader">
+            <div><i class="fas fa-user-graduate"></i><span class="menu-text">Для новичков</span></div>
+            <i class="fas fa-chevron-down menu-arrow"></i>
+          </div>
+          <ul class="menu-group-items collapsed" id="newbiesItems">
+            <li data-tab="what-is-rp">
+              <a href="#"><i class="fas fa-theater-masks"></i><span class="menu-text">Что такое РП</span></a>
+            </li>
+            <li data-tab="chat-commands">
+              <a href="#"><i class="fas fa-keyboard"></i><span class="menu-text">Команды чата</span></a>
+            </li>
+          </ul>
+        </div>
+        <!-- ФИКС: Лор теперь в menu-group -->
+        <div class="menu-group">
+          <div class="menu-group-header" id="lorHeader">
+            <div><i class="fas fa-star-of-life"></i><span class="menu-text">Лор</span></div>
+            <i class="fas fa-chevron-down menu-arrow"></i>
+          </div>
+          <ul class="menu-group-items collapsed" id="lorItems">
+            <li data-tab="omegax-0">
+              <a href="#"><span class="menu-text">Omegax-0</span></a>
+            </li>
+            <!-- остальные подразделы лора -->
+          </ul>
+        </div>
+        <div class="menu-group">
+          <div class="menu-group-header" id="formationsHeader">
+            <div><i class="fas fa-star-of-life"></i><span class="menu-text">Формирования Империи</span></div>
+            <i class="fas fa-chevron-down menu-arrow"></i>
+          </div>
+          <ul class="menu-group-items collapsed" id="formationsItems">
+            <li data-tab="storm-corps">
+              <a href="#"><span style="font-size:1.2em; margin-right:10px;">⚔️</span><span class="menu-text">Штурмовой Корпус</span></a>
+            </li>
+            <li data-tab="imperial-army">
+              <a href="#"><i class="fas fa-shield-alt"></i><span class="menu-text">Имперская Армия</span></a>
+            </li>
+            <li data-tab="components">
+              <a href="#"><i class="fas fa-cogs"></i><span class="menu-text">КОМПОНП</span></a>
+            </li>
+            <li data-tab="fleet">
+              <a href="#"><i class="fas fa-space-shuttle"></i><span class="menu-text">Имперский Флот</span></a>
+            </li>
+            <li data-tab="ibb">
+              <a href="#"><i class="fas fa-user-secret"></i><span class="menu-text">ИББ</span></a>
+            </li>
+            <li data-tab="vihov">
+              <a href="#"><i class="fas fa-users"></i><span class="menu-text">Коалиция Вижен</span></a>
+            </li>
+            <li data-tab="imperial-elite">
+              <a href="#"><i class="fas fa-crown"></i><span class="menu-text">Имперская Элита</span></a>
+            </li>
+            <li data-tab="inquisitorium">
+              <a href="#"><i class="fas fa-eye"></i><span class="menu-text">Инквизиторий</span></a>
+            </li>
+            <li data-tab="mercenaries">
+              <a href="#"><i class="fas fa-user-ninja"></i><span class="menu-text">Наёмники</span></a>
+            </li>
+            <li data-tab="inquisitors">
+              <a href="#"><i class="fas fa-mask"></i><span class="menu-text">Тени</span></a>
+            </li>
+            <li data-tab="commandos">
+              <a href="#"><i class="fas fa-user-secret"></i><span class="menu-text">Коммандос</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="menu-group">
+          <div class="menu-group-header" id="docsHeader">
+            <div><i class="fas fa-file-contract"></i><span class="menu-text">Документация</span></div>
+            <i class="fas fa-chevron-down menu-arrow"></i>
+          </div>
+          <ul class="menu-group-items collapsed" id="docsItems">
+            <li data-tab="regulations">
+              <a href="#"><i class="fas fa-book"></i><span class="menu-text">Основной Устав</span></a>
+            </li>
+            <li data-tab="academy">
+              <a href="#"><i class="fas fa-graduation-cap"></i><span class="menu-text">Имперская Академия</span></a>
+            </li>
+            <li data-tab="rules">
+              <a href="#"><i class="fas fa-clipboard-list"></i><span class="menu-text">Регламенты</span></a>
+            </li>
+          </ul>
+        </div>
+        <li data-tab="droids">
+          <a href="#"><i class="fas fa-robot"></i><span class="menu-text">Дроиды</span></a>
+        </li>
+        <li data-tab="medicine">
+          <a href="#"><i class="fas fa-medkit"></i><span class="menu-text">Медицина</span></a>
+        </li>
+      </ul>
+    </div>
+
+      <!-- Основное содержимое -->
+      <div class="main-content">
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h1>WARS OF THE EMPIRE</h1>
+          </div>
+
+          <!-- ==================== ГЛАВНАЯ СТРАНИЦА ==================== -->
+          <div id="main" class="tab-content active">
+            <div class="content-section">
+              <h2>Основная информация</h2>
+              <p>Добро пожаловать на сайт сервера Wars of the Empire. Тут вы сможете более подробно ознакомиться с уставом сервера и разными формированиями Галактической империи.</p>
+              <p>События на сервере разворачиваются за ? лет ? битвы при Явине.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>О сервере</h2>
+              <p>Wars of the Empire - это сервер ролевых игр во вселенной Star Wars, где игроки могут присоединиться к различным подразделениям Империи и участвовать в масштабных галактических событиях. Основные особенности:</p>
+              <ul>
+                <li>Приятная система ролевой игры</li>
+                <li>Разветвленная система званий и карьерного роста</li>
+                <li>Уникальные игровые механики для каждого подразделения</li>
+                <li>Регулярные события и миссии</li>
+                <li>Детально проработанный лор(нет)</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ==================== ЧТО ТАКОЕ РП ==================== -->
+          <div id="what-is-rp" class="tab-content">
+            <div class="content-section">
+              <h2>Что такое ролевая игра (РП)?</h2>
+              <p>Ролевая игра (RolePlay, RP) - это форма игры, где участники принимают на себя роли персонажей и совместно создают историю, взаимодействуя друг с другом в рамках установленных правил и игрового мира.</p>
+
+              <div class="info-card">
+                <h3>Основные принципы</h3>
+                <ul>
+                  <li><strong>Отыгрыш персонажа:</strong> Вы не играете "за себя", а воплощаете роль своего персонажа с его характером, мотивами и особенностями.</li>
+                  <li><strong>Иммерсивность:</strong> Старайтесь вести себя так, как если бы вы действительно находились в мире Star Wars.</li>
+                  <li><strong>Уважение к другим игрокам:</strong> Все участники равны, важно уважать чужой отыгрыш и не мешать другим.</li>
+                  <li><strong>Следование лору:</strong> Все действия должны соответствовать вселенной Star Wars и установленным на сервере правилам.</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+  <!-- ==================== КОМАНДЫ ЧАТА ==================== -->
+  <div id="chat-commands" class="tab-content">
+    <div class="content-section">
+      <h2>Команды чата</h2>
+      <p>На сервере используется система для разных типов общения в чате. Это помогает разделять ролевое и не ролевое общение.</p>
+
+      <div class="command-card">
+        <h4>ooc - Общий чат</h4>
+        <p>Используется для не ролевого общения на весь сервер. Здесь можно обсуждать технические вопросы, спрашивать совета или просто общаться вне роли.</p>
+        <div class="command-example">// Всем привет</div>
+        <p class="command-note">Не используйте OOC чат для ролевой информации и не спамьте. Все сообщения должны быть на русском языке.</p>
+      </div>
+
+      <div class="command-card">
+        <h4>/me - Отыгровка действия</h4>
+        <p>Основная команда для ролевых действий. Пишется от третьего лица и описывает действия вашего персонажа.</p>
+        <div class="command-example">/me осторожно осматривает помещение, держа бластер наготове</div>
+        <p class="command-note">Старайтесь делать описания живыми, но не слишком длинными.</p>
+      </div>
+
+      <div class="command-card">
+        <h4>/looc - Локальный OOC</h4>
+        <p>OOC сообщение, видимое только для игроков рядом с вами. Используется для быстрых вопросов и уточнений по текущей сцене.</p>
+        <div class="command-example">/l ты меня видишь? у меня лаги</div>
+      </div>
+
+      <div class="command-card">
+        <h4>/pm - Личное сообщение</h4>
+        <p>Приватное сообщение другому игроку. Видно только вам и получателю.</p>
+        <div class="command-example">/pm TK-421 Ты где? Нам нужна помощь в ангаре!</div>
+        <p class="command-note">Используйте ник игрока. Не спамьте личными сообщениями.</p>
+      </div>
+
+      <div class="command-card">
+        <h4>/com - Доклады (RP)</h4>
+        <p>Специальный канал для ролевых докладов.</p>
+        <div class="command-example">/com Капитан TK-451 докладывает о захвате объекта, потерь нет</div>
+        <p><strong>Правила:</strong></p>
+        <ul>
+          <li>Только официальные доклады и служебные сообщения</li>
+          <li>Соблюдайте субординацию и имперский этикет</li>
+          <li>Избегайте лишней информации</li>
+        </ul>
+      </div>
+
+      <div class="command-card">
+        <h4>OOC - Основные правила</h4>
+        <p>Out Of Character (OOC) - общение вне роли. Основные правила:</p>
+        <ul>
+          <li>Не используйте OOC для ролевой информации</li>
+          <li>Избегайте спама и флуда</li>
+          <li>Не обсуждайте политику и другие чувствительные темы</li>
+          <li>Все OOC сообщения должны быть на русском языке</li>
+        </ul>
+        <p class="command-note">Нарушение OOC-правил может привести к наказанию.</p>
+      </div>
+    </div>
+  </div>
+  <div id="omegax-0" class="tab-content">
+    <div class="content-section" style="
+      background: rgba(15,15,20,0.95);
+      border-left: 4px solid #3a3a3a;
+      padding: 40px;
+      margin-bottom: 30px;
+    ">
+      <h2 style="
+        color: #e0e0e0;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 3px;
+        margin-top: 0;
+        border-bottom: 1px solid #333;
+        padding-bottom: 15px;
+      ">
+        СЕКТОР OMEGAX-NULL
+      </h2>
+
+      <div style="color: #bbb; line-height: 1.8; font-size: 1.1em;">
+        <p style="margin-bottom: 30px;">
+          <span style="color: #a00; font-weight: bold; font-size: 1.2em;">Темнота.</span><br>
+          Не просто отсутствие света — живая, дышащая тьма, которая просачивается в легкие, застывает в жилах, шепчет на языке, забытом еще до рождения Республики.
+        </p>
+
+        <p style="margin-bottom: 30px; font-style: italic; border-left: 2px solid #333; padding-left: 20px;">
+          Здесь нет надежды. Нет имен. Нет "людей".<br>
+          Есть только материал.
+        </p>
+
+        <h3 style="color: #d0d0d0; border-bottom: 1px solid #333; padding-bottom: 8px; font-size: 1.3em;">КОРИДОРЫ</h3>
+        <p style="margin-bottom: 30px;">
+          Стены, покрытые струпьями засохшей крови. Провода, свисающие, как кишки. Вентиляция, забитая клочьями кожи — они пытались бежать. Они все пытаются бежать.
+        </p>
+
+        <div style="
+          background: rgba(30,25,30,0.6);
+          padding: 20px;
+          margin: 30px 0;
+          border-left: 3px solid #a00;
+        ">
+          <p style="margin: 5px 0; font-style: italic; color: #999;">"Omegax — это не проект. Это молитва."</p>
+          <p style="margin: 5px 0; font-style: italic; color: #999;">"Они не хотят, чтобы ты умер. Они хотят, чтобы ты остался."</p>
+          <p style="margin: 5px 0; font-style: italic; color: #999;">"Пожалуйста, убейте меня."</p>
+        </div>
+
+        <h3 style="color: #d0d0d0; border-bottom: 1px solid #333; padding-bottom: 8px; font-size: 1.3em;">КАМЕРЫ</h3>
+        <ul style="padding-left: 20px;">
+          <li style="margin-bottom: 15px;">
+            <strong style="color: #a00;">Первая неделя</strong> — еще есть крики.<br>
+            Дети зовут матерей. Джедаи взывают к Силе. Охранники смеются.
+          </li>
+          <li style="margin-bottom: 15px;">
+            <strong style="color: #a00;">Вторая неделя</strong> — шепот.<br>
+            Голодные, они едят собственные языки. Жаждущие, они пьют мочу из луж на полу.
+          </li>
+          <li style="margin-bottom: 15px;">
+            <strong style="color: #a00;">Третья неделя</strong> — тишина.<br>
+            Они еще дышат. Еще моргают. Но в глазах — только чернота.<br>
+            Они уже не люди.
+          </li>
+        </ul>
+
+        <h3 style="color: #d0d0d0; border-bottom: 1px solid #333; padding-bottom: 8px; font-size: 1.3em;">ПРОТОКОЛ "NULL"</h3>
+        <p style="margin-bottom: 15px;">
+          Если хоть один материал вырвется...<br>
+          Если хоть один охранник дрогнет...<br>
+          Если хоть один файл утечет...
+        </p>
+        <p style="color: #a00; font-weight: bold; margin-bottom: 15px;">
+          Сектор исчезнет.
+        </p>
+        <p style="margin-bottom: 30px;">
+          Не взрыв. Не разрушение.<br>
+          Просто... пустота.<br>
+          Как будто его никогда не было.
+        </p>
+
+        <h3 style="color: #d0d0d0; border-bottom: 1px solid #333; padding-bottom: 8px; font-size: 1.3em;">ТАЙНА, КОТОРОЙ НЕТ</h3>
+        <p style="margin-bottom: 15px;">
+          OMEGAX-NULL не существует.<br>
+          Официально.
+        </p>
+        <p style="margin-bottom: 30px;">
+          Нет координат. Нет записей в архивах. Никаких следов. Даже черные рынки и преступные синдикаты не знают о нем — а если кто-то и слышал шепот, то этот кто-то уже стал частью проекта.
+        </p>
+        <p style="color: #a00; font-weight: bold; margin-bottom: 30px;">
+          Только двое знают правду.
+        </p>
+
+        <h3 style="color: #d0d0d0; border-bottom: 1px solid #333; padding-bottom: 8px; font-size: 1.3em;">ПРАВИЛО АБСОЛЮТНОГО МОЛЧАНИЯ</h3>
+        <ul style="padding-left: 20px; margin-bottom: 30px;">
+          <li style="margin-bottom: 10px;">Если охранник заговорит — его подвергнут тем же пыткам, что и материал.</li>
+          <li style="margin-bottom: 10px;">Если ученый попытается передать данные — его поместят в камеру и начнут <span style="color: #a00; font-weight: bold;">переделывать</span>.</li>
+          <li style="margin-bottom: 10px;">Если кто-то сбежит — найдут не только его. Найдут всех, с кем он контактировал.</li>
+        </ul>
+        <p style="color: #a00; font-weight: bold; margin-bottom: 15px;">
+          И смерть будет милостью.
+        </p>
+        <p style="margin-bottom: 30px;">
+          Потому что тех, кто нарушает молчание, не убивают.<br>
+          Их <span style="color: #a00; font-weight: bold;">переделывают</span>.
+        </p>
+
+        <h3 style="color: #d0d0d0; border-bottom: 1px solid #333; padding-bottom: 8px; font-size: 1.3em;">ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ</h3>
+        <p style="margin-bottom: 15px;">
+          Ты прочел это?
+        </p>
+        <p style="color: #a00; font-weight: bold; margin-bottom: 15px;">
+          Они уже знают.
+        </p>
+        <p style="font-size: 1.2em; margin-bottom: 10px;">
+          Беги.
+        </p>
+        <p style="font-size: 1.2em;">
+          Или готовься стать частью молитвы.
+        </p>
+      </div>
+    </div>
+  </div>
+          <!-- ==================== ШТУРМОВОЙ КОРПУС ==================== -->
+          <div id="storm-corps" class="tab-content">
+            <div class="content-section">
+              <h2>Штурмовой Корпус</h2>
+              <p>Элитный отряд бойцов, специально обученных для штурма территорий и выполнения ключевых боевых операций в галактических конфликтах.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>Описание</h2>
+              <p>Штурмовой корпус стал одним из самых узнаваемых символов Галактической Империи, исполняя роль универсальных солдат, способных справляться с любыми вызовами на поле боя.</p>
+              <p>Штурмовой корпус возник на основании 41-го элитного корпуса клонов, который был создан для выполнения задач во время Войн клонов. После трансформации Галактической Республики в Империю под руководством Императора Палпатина, 41-й элитный корпус был переименован в штурмовой легион.</p>
+              <p>Броня штурмовиков обеспечивает защиту в боевых условиях, сохраняя при этом высокую мобильность. Первоначально броня была белого цвета, но со временем стала адаптироваться к различным боевым условиям.</p>
+              <p>Штурмовой корпус олицетворяет дисциплину, силу и непоколебимую преданность Императору, становясь ключевым элементом компаний Империи и символом ее власти в галактике.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>Специализации</h2>
+
+              <!-- Ударный Штурмовик -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Ударный Штурмовик</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Ударный штурмовик — это мощное и специализированное подразделение в рамках Штурмового Корпуса, созданное для выполнения задач, связанных с наступательными операциями в условиях жестокого сопротивления. Эти бойцы выделяются своим тяжелым вооружением и усиленной броней, что делает их значительной силой на поле боя. </p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>DLT-19</li>
+                    <li>SE-14R</li>
+                    <li>Z-6i (Командир)</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Огненная граната</li>
+                    <li>Термальный детонатор</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Штурмовик Разведчик -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Штурмовик Разведчик</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Штурмовик-Разведчик - это специализированное подразделение в рамках Штурмового Корпуса, обученное для проведения разведывательных операций и выполнения миссий в особых условиях. Их легкая броня обеспечивает высокую мобильность, а отличительная конфигурация шлема с большим визором улучшает обзор и внимание к деталям, что особенно полезно при использовании спидеров и в условиях низкой видимости. Эти бойцы были обучены искусству стрельбы и тактическому маневрированию, что сделало их одними из лучших снайперов в Имперской армии. </p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>DLT-19X</li>
+                    <li>EC-17</li>
+                    <li>Scatter shotgun (Командир)</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Дымовая граната</li>
+                    <li>белый бинокль</li>
+                    <li>светошумовая граната</li>
+                    <li>Крюк-кошка</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Штурмовик Медик -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Штурмовик Медик</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Штурмовик-Медик — это специализированное подразделение в рамках Штурмового Корпуса, созданное для оказания медицинской помощи в экстремальных условиях, экстренной стабилизации состояния бойцов на поле боя,  а также проведением хирургических операций. Их основная роль заключается в обеспечении медицинского прикрытия во время захвата укреплённых позиций и организации полевых госпиталей в условиях прямого контакта. </p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>E-11</li>
+                    <li>SE-14r</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li> Инструмент починки броневых пластин (выдача брони)</li>
+                    <li>Дымовая граната</li>
+                    <li>бакта-граната</li>
+                    <li>дефибриллятор</li>
+                    <li>бакта-инжектор</li>
+                  </ul>
+                </div>
+              </div>            
+
+              <!-- Штурмовик Гранатомётчик-->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Штурмовик Гранатомётчик</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Штурмовик-Гранатомётчик — это специализированное подразделение в рамках Штурмового Корпуса, созданное для огневовго подавления противника на средних и дальних дистанциях. Их главная задача - точечное уничтожение укреплённых позиций, огневых точек и живой силы противника, обеспечивая продвижение основных сил. </p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>E-11</li>
+                    <li>SE-44C</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Гранатомёт</li>
+                    <li>термальный детонатор</li>
+                  </ul>
+                </div>
+              </div> 
+
+              <!-- Штурмовик Смерти -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Штурмовик Смерти</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Штурмовик-Смерти — это элитное подразделение в рамках Штурмового Корпуса, созданное для для выполнения задач, связанных с обеспечением безопасности и защиты важных лиц Империи. Их основная роль заключается в обороне стратегических точек, таких как: базы, штабы и важные инфраструктурные объекты, а также в поддержании порядка в зонах с повышенной активностью противников. </p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>E-11D</li>
+                    <li>SE-14R</li>
+                    <li>DLT-19D (Командир)</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Инструмент починки броневых пластин ( выдача брони )</li>
+                    <li>Дымовая граната</li>
+                    <li>Диоксис граната</li>
+                    <li>бакта-граната</li>
+                  </ul>
+                </div>
+              </div>  
+              <!-- Штурмовик Танкист -->
+  <div class="trooper-specialization">
+    <div class="trooper-header">
+      <h4>Штурмовик Танкист</h4>
+      <i class="fas fa-chevron-down trooper-arrow"></i>
+    </div>
+    <div class="trooper-content">
+      <p>Штурмовик Танкист - это элитное подразделение в рамках Штурмового Корпуса, специализирующееся на управлении боевой техникой. Танкисты проходят специальную подготовку для ведения боевых действий на тяжелой технике в различных условиях.</p>
+      <h4>Вооружение:</h4>
+      <ul>
+        <li>E-11</li>
+        <li>SE-14R</li>
+      </ul>
+      <h4>Доп. снаряжение:</h4>
+      <ul>
+        <li>Отсутствует</li>
+      </ul>
+    </div>
+  </div>
+            </div> 
+
+            <div class="content-section">
+              <h2>Система Званий</h2>
+              <h3>Высшее командование структуры:</h3>
+              <ul>
+                <li>Маршал</li>
+                <li>Коммандер</li>
+              </ul>
+
+              <h3>Старшие Офицерские звания ШК:</h3>
+              <ul>
+                <li>Полковник</li>
+                <li>Подполковник</li>
+                <li>Майор</li>
+              </ul>
+
+              <h3>Младшие Офицерские звания ШК:</h3>
+              <ul>
+                <li>Капитан</li>
+                <li>Обер-Лейтенант</li>
+                <li>Лейтенант</li>
+                <li>Суб-Лейтенант</li>
+              </ul>
+
+              <h3>Солдатские звания ШК:</h3>
+              <ul>
+                <li>Командир (Специализации)</li>
+                <li>Команд-Сержант</li>
+                <li>Мастер-Сержант</li>
+                <li>Сержант</li>
+                <li>Младший-Сержант</li>
+                <li>Капрал</li>
+                <li>Рядовой Первого Класса</li>
+                <li>Рядовой</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ==================== ИМПЕРСКАЯ АРМИЯ ==================== -->
+          <div id="imperial-army" class="tab-content">
+            <div class="content-section">
+              <h2>Имперская Армия</h2>
+              <p>Бойцы Империи, обеспечивающие контроль над территориями и поддержку спецподразделений.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>Описание</h2>
+              <p>Имперская армия, являлась одним из видов Имперских Вооружённых Сил, предназначенным для проведения наземных и воздушных операций под командованием Генерального Штаба.</p>
+              <p>Армия была создана на основе Великой Армии Республики после преобразования Республики в Империю. В отличие от клонированных войск, Имперская Армия комплектуется из набранных добровольцев и призывников.</p>
+              <p>Солдаты Армии оснащены стандартной бронёй и вооружением, обеспечивающим эффективное выполнение боевых задач в различных условиях.</p>
+              <p>Имперская Армия отвечает за поддержание порядка на планетах, охрану стратегических объектов и проведение крупномасштабных военных операций.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>Специализации</h2>
+
+              <!-- Пилот Армии -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Пилот Армии</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Пилот Армии — это специализированное подразделение в рамках Имперской Армии, созданное для ведения боевых действий в воздушном пространстве и обеспечения превосходства в небе. Их основная задача включает сопровождение транспортных кораблей, перехват вражеских истребителей, а также поддержка наземных операций с воздуха.</p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>DL-18</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Отсутствует</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Техник Армии -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Техник Армии</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Техник Армии - это специализированное подразделение в рамках Имперской Армии, созданное для обеспечения бесперебойной работы инфроструктуры базы и поддержания боеготовности. Их основная задача включает ремонт и обслуживание критических систем, а также обезвреживание взрывных устройств на поле боя.</p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>E-11</li>
+                    <li>DL-18</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Фузионный резак "F-187"</li>
+                    <li>Инструмент починки дронов</li>
+                    <li>Инструмент взлома дронов</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Разведчик Армии -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Разведчик Армии</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Разведчик Армии - это элитное подразделение в составе Имперской Армии, специализирующееся на сборе стратегической информации, скрытном наблюдении и проведении диверсионных операций. Главное отличие от Разведчиков Штурмового Корпуса это наличие в арсенале управляемых дронов-разведчиков, позволяющих вести наблюдение на небольших расстояниях и минимизировать потери.</p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>E-11S</li>
+                    <li>EC-17</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Дроны</li>
+                    <li>Радар дронов</li>
+                    <li>Пульт управления дронами</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2>Система Званий</h2>
+              <h3>Высшее командование структуры:</h3>
+              <ul>
+                <li>Генерал</li>
+                <li>Коммандер</li>
+              </ul>
+
+              <h3>Старшие Офицерские звания ИА:</h3>
+              <ul>
+                <li>Полковник</li>
+                <li>Подполковник</li>
+                <li>Майор</li>
+              </ul>
+
+              <h3>Младшие Офицерские звания ИА:</h3>
+              <ul>
+                <li>Капитан</li>
+                <li>Обер-Лейтенант</li>
+                <li>Лейтенант</li>
+                <li>Суб-Лейтенант</li>
+              </ul>
+
+              <h3>Солдатские звания ИА:</h3>
+              <ul>
+                <li>Командир (Специализации)</li>
+                <li>Команд-Сержант</li>
+                <li>Мастер-Сержант</li>
+                <li>Сержант</li>
+                <li>Младший-Сержант</li>
+                <li>Капрал</li>
+                <li>Рядовой Первого Класса</li>
+                <li>Рядовой</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ==================== КОМПОНП ==================== -->
+          <div id="components" class="tab-content">
+            <div class="content-section">
+              <h2>Комиссия по охране Нового порядка (КОМПОНП)</h2>
+              <p>Организация, отвечающая за поддержание Нового порядка и контроль над населением на территориях Империи.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>Описание</h2>
+              <p>Комиссия по охране Нового порядка, более известная как Компонп (КОМПОНП), — это организация, созданная в начале существования Галактической Империи. Основной задачей КОМПОНП является формирование поддержки Нового порядка среди населения и управление общественным мнением.</p>
+              <p>Они используют различные методы, включая пропаганду, слежку и контроль, чтобы подавить любые антиимперские настроения и гарантировать лояльность граждан.</p>
+              <p>КОМПОНП также следит за отдельными группами, которые могут представлять угрозу для стабильности Империи, включая повстанцев, и активно борется с ними в различных формах.</p>
+              <p>КОМПОНП является символом репрессий и жестокости Империи, проводя мероприятия по контролю над населением и устранению оппозиции. Их действия направлены на удержание власти в условиях растущего сопротивления и развивающейся протестной активности.</p>
+            </div>
+
+            <div class="content-section">
+              <h2>Специализации</h2>
+
+              <!-- Специалист КОМПОНП -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Специалист КОМПОНП</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Это уникально подготовленный боец, наделённый исключительными навыками и мощным вооружением, которые делают его незаменимым как в бою, так и в защите стратегически важных персон в рамках КОМПОНП. В условиях повышенной нестабильности и хаоса, специалисты КОМПОНП играют критически важную роль в усилиях Империи по восстановлению власти. Их уникальные навыки, преданность и способность справляться с любыми вызовами делают их мастерами на поле боя, а также стражами для высокопрофильных лиц, что позволяет Империи сохранять стабильность и контроль над оставшимися территориями.</p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>Hunter Shotgun</li>
+                    <li>TL-50</li>
+                    <li>Smart Launcher</li>
+                    <li>DLT-20A</li>
+                    <li>Scutter Shotgun (Командир)</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Диоксис граната</li>
+                    <li>Термальный детонатор</li>
+                    <li>Светошумовая граната</li>
+                    <li>Дымовая граната</li>
+                    <li>Бинокль</li>
+                    <li>Инструмент починки броневых пластин (выдача брони)</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Агент КОМПОНП -->
+              <div class="trooper-specialization">
+                <div class="trooper-header">
+                  <h4>Агент КОМПОНП</h4>
+                  <i class="fas fa-chevron-down trooper-arrow"></i>
+                </div>
+                <div class="trooper-content">
+                  <p>Это боец, действующий в рамках правоохранительной структуры, созданной для поддержания порядка и защиты Империи. Он играет ключевую роль в борьбе со всеми угрозами, стремясь сохранить идеалы имперского режима. Его главная задача наладить порядок и предотвратить возможные преступления. Такой боец является неотъемлемой частью общественной безопасности и заслуживает почтения и уважения за свою работу и служение обществу.</p>
+                  <h4>Вооружение:</h4>
+                  <ul>
+                    <li>CR-2</li>
+                    <li>Dual RK-3</li>
+                    <li>CR-2C (Командир)</li>
+                  </ul>
+                  <h4>Доп. снаряжение:</h4>
+                  <ul>
+                    <li>Дымовая граната</li>
+                    <li>Электрошоковая граната</li>
+                    <li>Наручники</li>
+                    <li>Набор для ареста</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2>Система Званий</h2>
+              <h3>Высшее командование структуры:</h3>
+              <ul>
+                <li>Комиссар</li>
+                <li>Коммандер</li>
+              </ul>
+
+              <h3>Старшие Офицерские звания КОМПОНП:</h3>
+              <ul>
+                <li>Полковник</li>
+                <li>Подполковник</li>
+                <li>Майор</li>
+              </ul>
+
+              <h3>Младшие Офицерские звания КОМПОНП:</h3>
+              <ul>
+                <li>Капитан</li>
+                <li>Старший-Констебль</li>
+                <li>Констебль</li>
+                <li>Младший-Констебль</li>
+              </ul>
+
+              <h3>Солдатские звания КОМПОНП:</h3>
+              <ul>
+                <li>Командир (Специализации)</li>
+                <li>Команд-Сержант</li>
+                <li>Мастер-Сержант</li>
+                <li>Сержант</li>
+                <li>Младший-Сержант</li>
+                <li>Капрал</li>
+                <li>Рядовой Первого Класса</li>
+                <li>Рядовой</li>
+              </ul>
+            </div>
+          </div>
+
+    <!-- ==================== ИМПЕРСКИЙ ФЛОТ ==================== -->
+    <div id="fleet" class="tab-content">
+      <div class="content-section">
+        <h2>Имперский Флот</h2>
+        <p>Основная космическая ударная сила Империи, обеспечивающая контроль над гиперпространственными маршрутами и орбитальное превосходство.</p>
+      </div>
+
+      <div class="content-section">
+        <h2>Структура и обязанности</h2>
+        <p>Имперский Флот состоит из нескольких ключевых подразделений, каждое из которых выполняет особые задачи:</p>
+
+        <div class="info-card">
+          <h3>Линейные силы</h3>
+          <ul>
+            <li>Звёздные разрушители классов Imperial-I и Imperial-II</li>
+            <li>Крейсеры поддержки и перехватчики</li>
+            <p>(Обеспечивают огневую мощь в масштабных сражениях, проводят блокады планет)</p> 
+
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Истребительные группы</h3>
+          <ul>
+            <li>TIE-истребители различных модификаций</li>
+            <li>Эскадрильи перехватчиков и бомбардировщиков</li>
+            <p>(Обеспечивают защиту крупных кораблей, проводят разведку и точечные удары)</p> 
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Транспортные соединения</h3>
+          <ul>
+            <li>Шаттлы Lambda и Gamma</li>
+            <li>Грузовые транспорты класса Gozanti</li>
+            <p>(Обеспечивают логистику и переброску войск, проводят эвакуационные операции)</p> 
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Ключевые операции</h2>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Место для изображения звёздного разрушителя -->
+          </div>
+          <div class="unit-description">
+            <h3>ОРБИТАЛЬНЫЙ КОНТРОЛЬ</h3>
+            <p>Флот обеспечивает полное доминирование в космическом пространстве над ключевыми планетами Империи. Корабли постоянно патрулируют орбиты, готовые к немедленному вмешательству.</p>
+            <p>Стандартная орбитальная группировка включает один звёздный разрушитель, 2-3 крейсера поддержки и несколько эскадрилий истребителей.</p>
+          </div>
+        </div>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Место для изображения TIE-истребителей -->
+          </div>
+          <div class="unit-description">
+            <h3>КОСМИЧЕСКИЕ СРАЖЕНИЯ</h3>
+            <p>Флот разработал уникальную тактику противодействия повстанческим силам, основанную на подавляющем огневом превосходстве и координации между крупными кораблями и истребительными группами.</p>
+            <p>Особое внимание уделяется защите коммуникаций и логистических маршрутов.</p>
+          </div>
+        </div>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Место для изображения имперского десанта -->
+          </div>
+          <div class="unit-description">
+            <h3>ДЕСАНТНЫЕ ОПЕРАЦИИ</h3>
+            <p>Флот тесно взаимодействует с сухопутными силами, обеспечивая орбитальную поддержку и переброску войск. Специальные десантные корабли способны доставить целые дивизии на поверхность планеты за считанные часы.</p>
+            <p>Отработаны схемы быстрой эвакуации с использованием шаттлов и транспортников под прикрытием истребителей.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Система званий</h2>
+        <div class="info-card">
+          <h3>Флагманский состав</h3>
+          <ul>
+            <li>Гранд Адмирал</li>
+            <li>Адмирал</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Офицерский состав</h3>
+          <ul>
+            <li>Капитан Ⅰ ранга</li>
+            <li>Капитан Ⅱ ранга</li>
+            <li>Капитан Ⅲ ранга</li>
+            <li>Старший Лейтенант</li>
+            <li>Лейтенант</li>
+            <li>Младший Лейтенант</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Унтер-офицеры и рядовые</h3>
+          <ul>
+            <li>Старший Мичман</li>
+            <li>Мичман</li>
+            <li>Главный Старшина</li>
+            <li>Старшина</li>
+            <li>Старший Матрос</li>
+            <li>Матрос</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ИББ ==================== -->
+    <div id="ibb" class="tab-content">
+      <div class="content-section">
+        <h2>Имперское Бюро Безопасности</h2>
+        <p>Секретная служба, отвечающая за внутреннюю безопасность Империи, контрразведку и борьбу с подрывными элементами.</p>
+      </div>
+
+      <div class="content-section">
+        <h2>Основные направления деятельности</h2>
+
+        <div class="info-card">
+          <h3>Контрразведка</h3>
+          <ul>
+            <li>Выявление шпионов и предателей в рядах Империи</li>
+            <li>Контроль за лояльностью гражданского населения</li>
+            <li>Проведение операций под прикрытием</li>
+            <li>Внедрение агентов в повстанческие группировки</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Следственные операции</h3>
+          <ul>
+            <li>Расследование особо важных преступлений</li>
+            <li>Допросы подозреваемых с применением специальных методов</li>
+            <li>Анализ угроз безопасности Империи</li>
+            <li>Составление досье на потенциально опасных лиц</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Специальные операции</h3>
+          <ul>
+            <li>Ликвидация ключевых целей повстанцев</li>
+            <li>Захват особо опасных преступников</li>
+            <li>Проведение тайных операций за линией фронта</li>
+            <li>Обеспечение безопасности высокопоставленных лиц</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Методы работы</h2>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Место для изображения агента ИББ -->
+          </div>
+          <div class="unit-description">
+            <h3>АГЕНТЫ ПОД ПРИКРЫТИЕМ</h3>
+            <p>Сотрудники Бюро мастерски владеют искусством перевоплощения, годами внедряясь в преступные группировки и повстанческие ячейки. Используют сложные легенды и фальшивые идентификаторы.</p>
+            <p>После завершения операции все следы присутствия агента тщательно уничтожаются.</p>
+          </div>
+        </div>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Место для изображения допроса -->
+          </div>
+          <div class="unit-description">
+            <h3>СПЕЦИАЛЬНЫЕ ДОПРОСЫ</h3>
+            <p>ИББ разработало уникальные психологические и фармакологические методы допроса, позволяющие извлекать информацию даже из самых стойких источников. Каждое помещение для допросов оснащено скрытыми сенсорами и записывающими устройствами.</p>
+            <p>Используются технологии сканирования мозга и детекции лжи.</p>
+          </div>
+        </div>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Место для изображения спецоперации -->
+          </div>
+          <div class="unit-description">
+            <h3>ТАЙНЫЕ ОПЕРАЦИИ</h3>
+            <p>Для особо важных заданий ИББ использует специально обученные группы, оснащённые экспериментальным оружием и устройствами маскировки. Все операции проводятся без официального одобрения, чтобы обеспечить полную отрицаемость.</p>
+            <p>Агенты таких групп не существуют в официальных документах.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Структура и звания</h2>
+
+        <div class="info-card">
+          <h3>Руководящий состав</h3>
+          <ul>
+            <li>Директор</li>
+            <li>Заместитель Директора</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Офицерский состав</h3>
+          <ul>
+            <li>Генерал</li>
+            <li>Майор</li>
+            <li>Капитан</li>
+            <li>Старший Лейтенант</li>
+            <li>Лейтенант</li>
+            <li>Младший Лейтенант</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Оперативный состав</h3>
+          <ul>
+            <li>Старший Агент</li>
+            <li>Агент</li>
+            <li>Младший Агент</li>
+            <li>Капрал</li>
+            <li>Рядовой Первого Класса</li>
+            <li>Рядовой</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+          <!-- ==================== КОАЛИЦИЯ ВИЖЕН ==================== -->
+          <div id="vihov" class="tab-content">
+            <div class="content-section">
+              <h2>Коалиция Вижен</h2>
+              <p>Специальное подразделение, объединяющее различные силы для выполнения особых задач.</p>
+            </div>
+          </div>
+
+          <!-- ==================== ИМПЕРСКАЯ ЭЛИТА ==================== -->
+          <div id="imperial-elite" class="tab-content">
+            <div class="content-section">
+              <h2>Имперская Элита</h2>
+              <p>Элитные подразделения Империи — лучшие из лучших. Только самые достойные проходят отбор.</p>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="суперкомандос.png" alt="Имперские суперкомандос">
+              </div>
+              <div class="unit-description">
+                <h3>ИМПЕРСКИЕ СУПЕРКОМАНДОС</h3>
+                <p>Элитные мандалорские бойцы, выполняющие секретные миссии: диверсии, ликвидации, спецоперации. Являются лояльными к империи.</p>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="преторианец.jpg" alt="Имперские преторианцы">
+              </div>
+              <div class="unit-description">
+                <h3>ИМПЕРСКИЕ ПРЕТОРИАНЦЫ</h3>
+                <p>Личная гвардия Императора. Вооружены плазменными пиками, броня из редких сплавов, имеют право казнить без суда.</p>
+                <p>Один преторианец равен сотням солдат — их появление сеет ужас.</p>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="теневой страж.jpg" alt="Теневые стражи">
+              </div>
+              <div class="unit-description">
+                <h3>ИМПЕРСКИЕ ТЕНЕВЫЕ СТРАЖИ</h3>
+                <p>Мало кто знает об истинном происхождении таинственной и могущественной Теневой стражи — элитного подразделения специального назначения в составе Королевской гвардии Императора. Это молчаливые и загадочные воины, которые получают приказы непосредственно от Императора Палпатина и часто отправлялись на задания по устранению подозреваемых джедаев и других последователей Силы пользователей.</p>
+                <p>Основной задачей Теневой стражи Императора была охрана Императора.</p>
+              </div>
+            </div>
+          </div>
+
+    <!-- ==================== ИНКВИЗИТОРИЙ ==================== -->
+    <div id="inquisitorium" class="tab-content">
+      <div class="content-section">
+        <h2>Инквизиторий</h2>
+        <p>Орган, отвечающий за поиск и уничтожение остатков джедаев и других чувствительных к Силе существ.</p>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://static.wikia.nocookie.net/starwarsjedifallenorder/images/d/d3/Purge_Troopers_%28Electrostaff%29.png/revision/latest?cb=20191118213839" alt="Штурмовик Охотник">
+        </div>
+        <div class="unit-description">
+          <h3>ШТУРМОВИК ОХОТНИК</h3>
+          <p>Элитные бойцы, специально обученные для охоты на джедаев. Оснащены броней с улучшенной защитой против световых мечей и специализированным оружием.</p>
+          <p>Действуют в тесном контакте с инквизиторами, обеспечивая поддержку в операциях по поимке чувствительных к Силе.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/originals/ff/dd/11/ffdd1155bbd29a342c8f7782590959c2.png" alt="Вторая Сестра">
+        </div>
+        <div class="unit-description">
+          <h3>ВТОРАЯ СЕСТРА</h3>
+          <p>Одна из самых опасных инквизиторов, специализирующаяся на выслеживании и поимке беглых джедаев. Мастер двойного светового меча и психологических пыток.</p>
+          <p>Ее методы допроса сломали даже самых стойких членов Ордена джедаев.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/736x/8d/f1/9e/8df19e11e063158ff2d167b95fc1f400.jpg" alt="Четвёртая Сестра">
+        </div>
+        <div class="unit-description">
+          <h3>ЧЕТВЁРТАЯ СЕСТРА</h3>
+          <p>Эксперт по допросам и психологическому воздействию. Использует уникальную технику "ментального зондирования".</p>
+          <p>Ее методы позволяют извлекать информацию даже из самых стойких умов.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://static.wikia.nocookie.net/rustarwars/images/f/f9/Fifth_Brother_Kenobi_show.png/revision/latest?cb=20220527141102" alt="Пятый Брат">
+        </div>
+        <div class="unit-description">
+          <h3>ПЯТЫЙ БРАТ</h3>
+          <p>Физически мощный инквизитор, предпочитающий прямые столкновения. Его двуручный световой меч способен пробивать даже самую прочную броню.</p>
+          <p>Часто используется для штурмов укреплённых позиций джедаев.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/736x/64/eb/09/64eb095913bd36e9393063b707a33a12.jpg" alt="Шестой Брат">
+        </div>
+        <div class="unit-description">
+          <h3>ШЕСТОЙ БРАТ</h3>
+          <p>Хладнокровный и расчетливый инквизитор, предпочитающий методы скрытного наблюдения и внезапные атаки. Использует уникальный световой меч с кольцевой рукоятью.</p>
+          <p>Специализируется на проникновении в повстанческие группировки и выявлении чувствительных к Силе.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://static.wikia.nocookie.net/rustarwars/images/4/4f/Seventh_Sister_EaW.png/revision/latest/scale-to-width-down/1000?cb=20180527122647" alt="Седьмая Сестра">
+        </div>
+        <div class="unit-description">
+          <h3>СЕДЬМАЯ СЕСТРА</h3>
+          <p>Мастер манипуляции и обмана, использующая свои навыки для проникновения в доверие к целям. Вооружена изогнутым световым мечом и различными гаджетами для слежки.</p>
+          <p>Ее способность читать эмоции делает допросы невероятно эффективными.</p>
+        </div>
+      </div>
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.artfile.me/wallpaper/16-05-2020/1366x768/video-igry-star-wars--battlefront-sith-m-1514839.jpg" alt="Восьмой Брат">
+        </div>
+        <div class="unit-description">
+          <h3>ВОСЬМОЙ БРАТ</h3>
+          <p>Инквизитор, специализирующийся на боевых операциях и прямых столкновениях. Использует световой меч-посох и броню с улучшенной защитой.</p>
+          <p>Часто возглавляет карательные экспедиции против известных укрытий джедаев.</p>
+        </div>
+      </div>
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/736x/89/29/67/89296730f93ebf0f4ac7e5c8c121fc90.jpg" alt="Девятая Сестра">
+        </div>
+        <div class="unit-description">
+          <h3>ДЕВЯТАЯ СЕСТРА</h3>
+          <p>Бывший хранитель джедайского архива, ставшая одним из самых опасных охотников на бывших коллег.</p>
+          <p>Её знание джедайских техник делает её особенно опасной для рыцарей Ордена.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://avatars.mds.yandex.net/i?id=c34744207e323f9842fc724d70a5189f_l-10636899-images-thumbs&n=13" alt="Десятый Брат">
+        </div>
+        <div class="unit-description">
+          <h3>ДЕСЯТЫЙ БРАТ</h3>
+          <p>Специалист по скрытным операциям и внезапным атакам. Использует технику "призрачного удара" - атаки из невидимости.</p>
+          <p>Его появление редко фиксируется датчиками до самого момента атаки.</p>
+        </div>
+      </div>
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.ytimg.com/vi/tOs6ZCRyFnE/maxresdefault.jpg" alt="Гранд Инквизитор">
+        </div>
+        <div class="unit-description">
+          <h3>ГРАНД ИНКВИЗИТОР</h3>
+          <p>Глава Инквизиториума, бывший храмовый страж джедаев. Обладает огромной силой и авторитетом среди других инквизиторов.</p>
+          <p>Его двойной световой меч и тактические навыки делают его одним из самых опасных противников для уцелевших джедаев.</p>
+        </div>
+      </div>
+    </div>
+    <!-- ==================== НАЁМНИКИ ==================== -->
+    <div id="mercenaries" class="tab-content">
+      <div class="content-section">
+        <h2>Наёмники</h2>
+        <p>Профессиональные бойцы, работающие за плату. Хотя официально Империя не нанимает таких лиц, некоторые операции требуют их специфических навыков.</p>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/736x/8a/03/0b/8a030b4a6f8b912b8a59de35d88613a5.jpg" alt="Боба Фетт">
+        </div>
+        <div class="unit-description">
+          <h3>БОБА ФЕТТ</h3>
+          <p>Легендарный охотник за головами, наследник мандалорской традиции. Обладает модифицированной бронёй и арсеналом скрытого оружия.</p>
+          <p>Его услуги стоят дорого, но результат всегда оправдывает затраты.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/736x/7c/8e/6c/7c8e6c14d85ca3ebf38c83d5a7c83b4d.jpg" alt="Гридо">
+        </div>
+        <div class="unit-description">
+          <h3>ГРИДО</h3>
+          <p>Охотник за головами родом с Рода. Известен своей жестокостью и неразборчивостью в методах.</p>
+          <p>Специализируется на операциях в районах, контролируемых Хаттами.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/736x/84/74/ea/8474eae40902bdf958339a802de0f182.jpg" alt="Денгар">
+        </div>
+        <div class="unit-description">
+          <h3>ДЕНГАР</h3>
+          <p>Бывший имперский солдат, ставший наёмником. Использует тяжёлое вооружение и тактику "выжженной земли".</p>
+          <p>Особенно эффективен против повстанческих баз.</p>
+        </div>
+      </div>
+
+      <div class="unit-section">
+        <div class="unit-image">
+          <img src="https://i.pinimg.com/originals/d6/a8/f7/d6a8f7ed3976787457d6452c5ba6173d.jpg" alt="Босск">
+        </div>
+        <div class="unit-description">
+          <h3>БОССК</h3>
+          <p>Трандошанец, специализирующийся на выслеживании и поимке. Его обоняние в 100 раз острее человеческого.</p>
+          <p>Незаменим для операций по поиску скрывающихся целей.</p>
+        </div>
+      </div>
+    </div>
+    <!-- ==================== Коммандос ==================== -->
+    <div id="commandos" class="tab-content">
+      <div class="content-section">
+        <h2>Имперские Коммандос</h2>
+        <p>Элитное спецподразделение, созданное для выполнения особо сложных и секретных операций.</p>
+      </div>
+
+      <div class="content-section">
+        <h2>История и назначение</h2>
+        <p>Имперские Коммандос - наследники легендарных Республиканских коммандос, которые отличились во время Войн Клонов. После преобразования Республики в Империю, лучшие бойцы были отобраны для формирования новых элитных отрядов.</p>
+        <p>В отличие от стандартных штурмовиков, коммандос получают специализированную подготовку и уникальное снаряжение, позволяющее выполнять задачи, недоступные обычным войскам.</p>
+
+        <div class="info-card">
+          <h3>Основные задачи:</h3>
+          <ul>
+            <li>Диверсионные операции в тылу врага</li>
+            <li>Ликвидация ключевых целей</li>
+            <li>Разведка и сбор информации</li>
+            <li>Спасение заложников</li>
+            <li>Захват стратегических объектов</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Отличительные особенности</h2>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <img src="https://i.pinimg.com/originals/e2/99/6d/e2996de778655d34ec175c0f4e23a52a.jpg" alt="Имперский коммандос">
+          </div>
+          <div class="unit-description">
+            <h3>СПЕЦИАЛИЗИРОВАННАЯ БРОНЯ</h3>
+            <p>Броня коммандос значительно отличается от стандартной экипировки штурмовиков:</p>
+            <ul>
+              <li>Улучшенная защита за счёт пластин из сплава пласта</li>
+              <li>Встроенная система жизнеобеспечения для операций в агрессивных средах</li>
+              <li>Активный камуфляж для кратковременной маскировки</li>
+              <li>Модульная конструкция - можно адаптировать под конкретную миссию</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="unit-section">
+          <div class="unit-image">
+            <img src="https://i.pinimg.com/originals/4d/86/86/4d8686b6dd3815386b2966ad8862426b.jpg" alt="Вооружение коммандос">
+          </div>
+          <div class="unit-description">
+            <h3>УНИКАЛЬНОЕ ВООРУЖЕНИЕ</h3>
+            <p>Арсенал коммандос включает:</p>
+            <ul>
+              <li>DC-17m - модульный бластер (можно переключать между режимами винтовки, снайперской винтовки и гранатомёта)</li>
+              <li>Vibro-blade - виброклинок для ближнего боя</li>
+              <li>Thermal detonators - термальные детонаторы</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Структура и подготовка</h2>
+
+        <div class="info-card">
+          <h3>Отряды коммандос</h3>
+          <p>Коммандос работают небольшими группами по 4 человека (команда), каждый участник имеет свою роль:</p>
+          <ul>
+            <li><strong>Лидер</strong> - командует группой, принимает тактические решения</li>
+            <li><strong>Снайпер</strong> - обеспечивает огневую поддержку на дальних дистанциях</li>
+            <li><strong>Техник</strong> - отвечает за взлом систем, обезвреживание ловушек</li>
+            <li><strong>Штурмовик</strong> - основной огневой потенциал группы</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Подготовка</h3>
+          <p>Обучение коммандос длится 2 года и включает:</p>
+          <ul>
+            <li>Продвинутую тактическую подготовку</li>
+            <li>Изучение всех видов оружия и техники</li>
+            <li>Языки и культуру основных рас галактики</li>
+            <li>Методы скрытного проникновения</li>
+            <li>Психологическую устойчивость к пыткам</li>
+          </ul>
+          <p>Только 5% кандидатов успешно завершают курс.</p>
+        </div>
+      </div>
+
+    
+
+      <div class="content-section">
+        <h2>Система званий</h2>
+        <div class="info-card">
+          <h3>Командный состав</h3>
+          <ul>
+            <li>Капитан</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Офицеры</h3>
+          <ul>
+            <li>Офицер</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Солдаты</h3>
+          <ul>
+            <li>Сержант</li>
+            <li>Специалист</li>
+            <li>Рядовой</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- ==================== ТЕНИ ==================== -->
+    <div id="inquisitors" class="tab-content">
+      <div class="content-section">
+        <h2>Тени</h2>
+        <p>Секретное подразделение бойцов моей собственной разработки, чье существование известно лишь избранным в Империи.</p>
+      </div>
+
+      <div class="content-section">
+        <h2>Происхождение и тайна</h2>
+        <p>Тени - это абсолютно новое подразделение Империи. Их истинное происхождение, количество и даже возраст строго засекречены. Вот что известно:</p>
+        <ul>
+          <li><strong>Анонимность:</strong> Каждый боец скрывает свою личность за одинаковой броней и голосовым модулятором</li>
+          <li><strong>Количество:</strong> Неизвестно точно сколько их - оценки варьируются от 10 до 50 особей</li>
+          <li><strong>Возраст:</strong> Невозможно определить - все Тени говорят одинаково и двигаются идентично</li>
+          <li><strong>Происхождение:</strong> Неизвестно откуда они появляются - предположительно это результат секретной программы клонирования</li>
+        </ul>
+      </div>
+
+      <div class="content-section">
+        <h2>Внешний вид</h2>
+        <div class="unit-section">
+          <div class="unit-image">
+            <!-- Здесь будет фото когда добавим -->
+            <div style="background:#222; height:300px; display:flex; align-items:center; justify-content:center; color:#666;">
+              [Фото Тени будет добавлено позже]
+            </div>
+          </div>
+          <div class="unit-description">
+            <h3>УНИФИЦИРОВАННЫЙ ОБРАЗ</h3>
+            <p>Все Тени выглядят абсолютно одинаково, что усиливает психологическое воздействие на противника:</p>
+            <ul>
+              <li>Черная матовая броня с динамическим камуфляжем</li>
+              <li>Голосовой модулятор, искажающий голос до неузнаваемости</li>
+              <li>Отсутствие каких-либо опознавательных знаков</li>
+              <li>Абсолютно идентичные движения и манера речи</li>
+            </ul>
+            <p>Этот идентичный образ создает эффект "клонирования" даже если Тени на самом деле разные существа.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Тактика и способности</h2>
+        <p>На основании редких наблюдений в бою удалось установить некоторые особенности Теней:</p>
+
+        <div class="info-card">
+          <h3>Основные тактические приемы</h3>
+          <ul>
+            <li><strong>Фазовая маскировка:</strong> Могут становиться невидимыми на 15 секунд, что позволяет проникать в тыл</li>
+            <li><strong>Синхронные действия:</strong> Даже будучи разделены, действуют с пугающей согласованностью</li>
+            <li><strong>Ментальная связь:</strong> По-видимому, могут обмениваться информацией без слов</li>
+            <li><strong>Адаптация:</strong> Быстро анализируют тактику противника и подстраиваются под нее</li>
+          </ul>
+        </div>
+
+        <div class="info-card">
+          <h3>Боевые навыки</h3>
+          <ul>
+            <li><strong>Мастерство скрытности:</strong> Могут незаметно проникнуть куда угодно</li>
+            <li><strong>Искусные разведчики:</strong> Собирают информацию без обнаружения</li>
+            <li><strong>Холодное оружие:</strong> Предпочитают бесшумные методы ликвидации</li>
+            <li><strong>Психологическое воздействие:</strong> Их внезапные появления деморализуют врага</li>
+          </ul>
+        </div>
+
+        <div class="warning-note">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Полный спектр их способностей остается загадкой - наблюдались лишь фрагментарные проявления.</p>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Роль в Империи</h2>
+        <p>Тени выполняют особые задачи, недоступные обычным подразделениям:</p>
+
+        <div class="specialization-group">
+          <div class="specialization-header">
+            <h3>Основные функции</h3>
+            <i class="fas fa-chevron-down specialization-arrow"></i>
+          </div>
+          <div class="specialization-content">
+            <ul>
+              <li><strong>Глубокая разведка:</strong> Проникновение на вражеские объекты без следа</li>
+              <li><strong>Тайные ликвидации:</strong> Устранение целей без шума и следов</li>
+              <li><strong>Контрразведка:</strong> Выявление предателей и шпионов в рядах Империи</li>
+              <li><strong>Психологические операции:</strong> Распространение страха и дезинформации</li>
+              <li><strong>Защита секретов:</strong> Охрана особо важных тайн Империи</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="specialization-group">
+          <div class="specialization-header">
+            <h3>Особые привилегии</h3>
+            <i class="fas fa-chevron-down specialization-arrow"></i>
+          </div>
+          <div class="specialization-content">
+            <ul>
+              <li>Подчиняются только высшему командованию Империи</li>
+              <li>Имеют право проникать в любые помещения без объяснений</li>
+              <li>Могут задерживать и допрашивать любого без санкций</li>
+              <li>Используют экспериментальные технологии</li>
+              <li>Не обязаны отчитываться о своих действиях (кроме высшего командования)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-section">
+        <h2>Неизвестные факты</h2>
+        <p>О Тенях ходят множество слухов, но подтверждены лишь некоторые:</p>
+
+        <div class="regulation-block warning">
+          <h4><i class="fas fa-question-circle"></i> Загадки Теней</h4>
+          <ul class="forbidden-list">
+            <li><i class="fas fa-brain"></i> Некоторые считают, что они не люди, а киборги или даже призраки</li>
+            <li><i class="fas fa-clock"></i> Никто не видел, чтобы Тени ели или спали</li>
+            <li><i class="fas fa-dna"></i> Есть теории, что они клоны одного человека с модифицированной ДНК</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== ОСНОВНОЙ УСТАВ ==================== -->
+    <div id="regulations" class="tab-content">
+      <div class="content-section">
+        <h2>Основной Устав Империи</h2>
+        <p class="subtitle">Свод правил и норм поведения для всех военнослужащих Галактической Империи</p>
+
+        <!-- Шкала DEFCON -->
+        <div class="specialization-group">
+          <div class="specialization-header">
+            <h3>Шкала DEFCON</h3>
+            <i class="fas fa-chevron-down specialization-arrow"></i>
+          </div>
+          <div class="specialization-content">
+            <div class="info-card">
+              <p>Шкала DEFCON - система кодов состояния боеготовности, определяющая текущий статус базы и регламентирующая действия персонала.</p>
+            </div>
+
+            <div class="defcon-levels">
+              <!-- DEFCON 5 -->
+              <div class="defcon-card" data-level="5">
+                <div class="defcon-header">
+                  <span class="defcon-number">DEFCON 5</span>
+                  <span class="defcon-status">Штатная ситуация</span>
+                </div>
+                <div class="defcon-body">
+                  <div class="defcon-icon"><i class="fas fa-check-circle"></i></div>
+                  <div class="defcon-desc">
+                    <p><strong>Самый низкий уровень готовности.</strong> База функционирует в нормальном режиме.</p>
+                    <ul class="defcon-rules">
+                      <li>Служба осуществляется согласно стандартным регламентам</li>
+                      <li>Свободное ношение оружия разрешено только:
+                        <ul>
+                          <li>Членам Коалиции Вижен</li>
+                          <li>Охранным специализациям</li>
+                          <li>Имперской Элите</li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DEFCON 4 -->
+              <div class="defcon-card" data-level="4">
+                <div class="defcon-header">
+                  <span class="defcon-number">DEFCON 4</span>
+                  <span class="defcon-status">Боевая готовность</span>
+                </div>
+                <div class="defcon-body">
+                  <div class="defcon-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                  <div class="defcon-desc">
+                    <p><strong>Обнаружена потенциальная угроза.</strong> Возможна вражеская активность вблизи базы.</p>
+                    <ul class="defcon-rules">
+                      <li>Персонал обязан проявлять повышенную бдительность</li>
+                      <li>Техники должны быть готовы к немедленному вылету</li>
+                      <li>Разрешено открытое ношение оружия (на предохранителе)</li>
+                      <li>Патрулирование только группами от 3 бойцов</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DEFCON 3 -->
+              <div class="defcon-card" data-level="3">
+                <div class="defcon-header">
+                  <span class="defcon-number">DEFCON 3</span>
+                  <span class="defcon-status">Военное положение</span>
+                </div>
+                <div class="defcon-body">
+                  <div class="defcon-icon"><i class="fas fa-skull-crossbones"></i></div>
+                  <div class="defcon-desc">
+                    <p><strong>Начало боевых действий.</strong> Штурм базы или бои в непосредственной близости.</p>
+                    <ul class="defcon-rules">
+                      <li>Весь персонал переходит к обороне базы</li>
+                      <li>Разрешено снятие оружия с предохранителя</li>
+                      <li>Техники занимают боевые машины</li>
+                      <li>Командование обязано прибыть в Командный Центр</li>
+                      <li>Медики должны находиться на поле боя</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DEFCON 2 -->
+              <div class="defcon-card" data-level="2">
+                <div class="defcon-header">
+                  <span class="defcon-number">DEFCON 2</span>
+                  <span class="defcon-status">Вторжение</span>
+                </div>
+                <div class="defcon-body">
+                  <div class="defcon-icon"><i class="fas fa-biohazard"></i></div>
+                  <div class="defcon-desc">
+                    <p><strong>Противник проник на территорию базы.</strong> Критическая ситуация.</p>
+                    <ul class="defcon-rules">
+                      <li>Разрешена блокировка всех секторов базы</li>
+                      <li>Оборона ключевых объектов:
+                        <ul>
+                          <li>Командный Центр</li>
+                          <li>Ангар</li>
+                          <li>Оружейная</li>
+                          <li>Офисы Имперской Элиты</li>
+                        </ul>
+                      </li>
+                      <li>Невыполнение приказов карается на месте</li>
+                      <li>Разрешено использование любых ресурсов</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DEFCON 1 -->
+              <div class="defcon-card" data-level="1">
+                <div class="defcon-header">
+                  <span class="defcon-number">DEFCON 1</span>
+                  <span class="defcon-status">Эвакуация</span>
+                </div>
+                <div class="defcon-body">
+                  <div class="defcon-icon"><i class="fas fa-fire"></i></div>
+                  <div class="defcon-desc">
+                    <p><strong>База потеряна.</strong> Требуется немедленная эвакуация.</p>
+                    <ul class="defcon-rules">
+                      <li>Разблокировка всех секторов и ангаров</li>
+                      <li>Приоритет эвакуации - живые бойцы</li>
+                      <li>Транспорт взлетает только при полной загрузке</li>
+                      <li>Саботаж эвакуации карается расстрелом</li>
+                      <li>Заключенные и дроиды эвакуируются по возможности</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Строевой устав -->
+        <div class="specialization-group">
+          <div class="specialization-header">
+            <h3>Строевой устав</h3>
+            <i class="fas fa-chevron-down specialization-arrow"></i>
+          </div>
+          <div class="specialization-content">
+            <div class="regulation-block">
+              <h4>Основные понятия</h4>
+              <div class="drill-concepts">
+                <div class="concept-card">
+                  <div class="concept-icon"><i class="fas fa-users"></i></div>
+                  <h5>Строй</h5>
+                  <p>Установленное размещение солдат для совместных действий</p>
+                </div>
+
+                <div class="concept-card">
+                  <div class="concept-icon"><i class="fas fa-arrow-up"></i></div>
+                  <h5>Фронт</h5>
+                  <p>Сторона строя, куда обращены лица солдат</p>
+                </div>
+
+                <div class="concept-card">
+                  <div class="concept-icon"><i class="fas fa-arrow-down"></i></div>
+                  <h5>Тыл</h5>
+                  <p>Сторона, противоположная фронту</p>
+                </div>
+
+                <div class="concept-card">
+                  <div class="concept-icon"><i class="fas fa-arrows-alt-h"></i></div>
+                  <h5>Фланг</h5>
+                  <p>Правая или левая оконечность строя</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="regulation-block">
+              <h4>Обязанности в строю</h4>
+              <div class="rules-list">
+                <div class="rule-item">
+                  <div class="rule-number">1</div>
+                  <p>Командир обязан указать место и время построения</p>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-number">2</div>
+                  <p>Беспрекословное выполнение приказов вышестоящих</p>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-number">3</div>
+                  <p>Отдание чести только по приказу</p>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-number">4</div>
+                  <p>Вставать в строй только с разрешения</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="regulation-block warning">
+              <h4><i class="fas fa-ban"></i> Запрещено в строю</h4>
+              <ul class="forbidden-list">
+                <li>Находиться в AFK без предупреждения</li>
+                <li>Писать в чаты (кроме OOC, LOOC, PM)</li>
+                <li>Разговаривать без разрешения</li>
+                <li>Самовольно покидать строй</li>
+                <li>Доставать оружие без приказа</li>
+                <li>Использовать RP-команды (/me, /do, /try)</li>
+                <li>Применять анимации</li>
+              </ul>
+            </div>
+
+            <div class="regulation-block">
+              <h4>Основные команды</h4>
+              <div class="command-cards">
+                <div class="command-card">
+                  <div class="command-name">"Ровняйсь!"</div>
+                  <div class="command-desc">
+                    <p>Головы поворачиваются вправо, кроме направляющего</p>
+                  </div>
+                </div>
+
+                <div class="command-card">
+                  <div class="command-name">"Смирно!"</div>
+                  <div class="command-desc">
+                    <p>Стойка смирно, внимание, вопросы запрещены</p>
+                  </div>
+                </div>
+
+                <div class="command-card">
+                  <div class="command-name">"Вольно!"</div>
+                  <div class="command-desc">
+                    <p>Свободное положение в строю без его покидания</p>
+                  </div>
+                </div>
+
+                <div class="command-card">
+                  <div class="command-name">"Разойтись!"</div>
+                  <div class="command-desc">
+                    <p>Разрешение покинуть строй</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Техника безопасности -->
+        <div class="specialization-group">
+          <div class="specialization-header">
+            <h3>Техника безопасности</h3>
+            <i class="fas fa-chevron-down specialization-arrow"></i>
+          </div>
+          <div class="specialization-content">
+            <div class="info-card">
+              <p>Правила, обязательные для соблюдения всеми военнослужащими с целью предотвращения несчастных случаев.</p>
+            </div>
+
+            <div class="regulation-block danger">
+              <h4><i class="fas fa-radiation"></i> Критические нарушения</h4>
+              <div class="safety-grid">
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-building"></i></div>
+                  <p>Нахождение на крышах (кроме DEFCON 1-4, постов, тренировок)</p>
+                </div>
+
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-plane"></i></div>
+                  <p>Приближение к взлетно-посадочным полосам во время операций</p>
+                </div>
+
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-bolt"></i></div>
+                  <p>Отключение реактора/генератора без санкции</p>
+                </div>
+
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-grenade"></i></div>
+                  <p>Использование гранат (кроме DEFCON 1-3, боевых вылетов)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="regulation-block">
+              <h4>Огнестрельное оружие</h4>
+              <div class="rules-list">
+                <div class="rule-item">
+                  <div class="rule-number">1</div>
+                  <p>Запрещено направлять оружие на сослуживцев (кроме задержаний)</p>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-number">2</div>
+                  <p>Тренировки только на стрельбище или цитадели</p>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-number">3</div>
+                  <p>Оглушающий режим - только для Коалиции Вижен</p>
+                </div>
+                <div class="rule-item">
+                  <div class="rule-number">4</div>
+                  <p>Стрельба в реакторной запрещена (кроме DEFCON 1-2)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="regulation-block">
+              <h4>Транспорт и техника</h4>
+              <div class="safety-grid">
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-car"></i></div>
+                  <p>Запрещено приближаться к технике во время запуска (3м)</p>
+                </div>
+
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-rocket"></i></div>
+                  <p>Реактивные ранцы запрещены (кроме DEFCON 1-3, тренировок)</p>
+                </div>
+
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-users"></i></div>
+                  <p>Взлет только при полной посадке экипажа</p>
+                </div>
+
+                <div class="safety-item">
+                  <div class="safety-icon"><i class="fas fa-tools"></i></div>
+                  <p>Использование только разрешенной техники</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="regulation-block warning">
+              <h4><i class="fas fa-gavel"></i> Наказания</h4>
+              <p>За нарушения техники безопасности предусмотрены:</p>
+              <ul class="punishment-list">
+                <li>Выговор</li>
+                <li>Дисциплинарные взыскания</li>
+                <li>Трибунал за серьезные нарушения</li>
+                <li>Публичная казнь в особых случаях</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Уставные обращения -->
+        <div class="specialization-group">
+          <div class="specialization-header">
+            <h3>Уставные обращения</h3>
+            <i class="fas fa-chevron-down specialization-arrow"></i>
+          </div>
+          <div class="specialization-content">
+            <div class="info-card">
+              <p>Стандартизированные формы общения для поддержания дисциплины и субординации в Имперских Вооруженных Силах.</p>
+            </div>
+
+            <div class="regulation-block">
+              <h4>Основные формы</h4>
+              <div class="appeal-cards">
+                <div class="appeal-card">
+                  <div class="appeal-question">Подтверждение</div>
+                  <div class="appeal-answer">"Так точно!"</div>
+                </div>
+
+                <div class="appeal-card">
+                  <div class="appeal-question">Отрицание</div>
+                  <div class="appeal-answer">"Никак нет!"</div>
+                </div>
+
+                <div class="appeal-card">
+                  <div class="appeal-question">Незнание</div>
+                  <div class="appeal-answer">"Не могу знать!"</div>
+                </div>
+
+                <div class="appeal-card">
+                  <div class="appeal-question">Извинение</div>
+                  <div class="appeal-answer">"Виноват, исправлюсь!"</div>
+                </div>
+
+                <div class="appeal-card">
+                  <div class="appeal-question">Просьба</div>
+                  <div class="appeal-answer">"Разрешите обратиться!"</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="regulation-block">
+              <h4>Обращение к командованию</h4>
+              <table class="appeal-table">
+                <thead>
+                  <tr>
+                    <th>Звание</th>
+                    <th>Форма обращения</th>
+                    <th>Пример</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Маршал/Генерал</td>
+                    <td>"Господин Маршал/Генерал"</td>
+                    <td>"Господин Маршал, разрешите доложить!"</td>
+                  </tr>
+                  <tr>
+                    <td>Офицеры (Капитан+)</td>
+                    <td>"Господин [звание]"</td>
+                    <td>"Господин Капитан, задание выполнено!"</td>
+                  </tr>
+                  <tr>
+                    <td>Младшие офицеры</td>
+                    <td>"Сэр/Мадам"</td>
+                    <td>"Сэр, требуется ваше указание"</td>
+                  </tr>
+                  <tr>
+                    <td>Сержантский состав</td>
+                    <td>"Сержант"</td>
+                    <td>"Сержант, к вашим услугам"</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="regulation-block warning">
+              <h4><i class="fas fa-exclamation-circle"></i> Недопустимые формы</h4>
+              <ul class="forbidden-list">
+                <li>Фамильярные обращения ("эй ты", "чувак")</li>
+                <li>Использование кличек и прозвищ</li>
+                <li>Обращение на "ты" к старшим по званию</li>
+                <li>Сокращение званий ("кап" вместо "капитан")</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+          <!-- ==================== ИМПЕРСКАЯ АКАДЕМИЯ ==================== -->
+          <div id="academy" class="tab-content">
+            <div class="content-section">
+              <h2>Имперская Академия</h2>
+
+              <div class="academy-container">
+                <!-- Блок процесса обучения -->
+                <div class="academy-block primary">
+                  <div class="academy-header">
+                    <i class="fas fa-book-open"></i>
+                    <h3>Программа обучения</h3>
+                  </div>
+
+                  <div class="academy-steps">
+                    <!-- Этап 1 -->
+                    <div class="step">
+                      <div class="step-number">1</div>
+                      <div class="step-content">
+                        <h4>Теоретическая подготовка</h4>
+                        <ul>
+                          <li>Введение в текущее положение дел</li>
+                          <li>Изучение системы DEFCON</li>
+                          <li>Строевые уставы и дисциплина</li>
+                          <li>Обзор всех структур Империи</li>
+                          <li>Особенности Коалиции Вижен</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <!-- Этап 2 -->
+                    <div class="step">
+                      <div class="step-number">2</div>
+                      <div class="step-content">
+                        <h4>Практическая часть</h4>
+                        <ul>
+                          <li>Экскурсия по базе</li>
+                          <li>Физическая подготовка</li>
+                          <li>Проверка RP-навыков:
+                            <span class="tag">/me</span>
+                            <span class="tag">/do</span>
+                            <span class="tag">/roll</span>
+                          </li>
+                          <li>Краткий инструктаж по Discord-серверу</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <!-- Этап 3 -->
+                    <div class="step">
+                      <div class="step-number">3</div>
+                      <div class="step-content">
+                        <h4>Финальное испытание</h4>
+                        <ul>
+                          <li>Тестирование на базе ЦШК</li>
+                          <li>10-бальная система оценки</li>
+                          <li>Минимальный проходной балл: <strong>6/10</strong></li>
+                          <li>Выбор структуры для вступления</li>
+                          <li>Передача профильному инструктору</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Блок статусов -->
+                <div class="status-blocks">
+                  <!-- Кадет -->
+                  <div class="academy-block secondary">
+                    <div class="academy-header">
+                      <i class="fas fa-user-graduate"></i>
+                      <h3>Статус: Кадет</h3>
+                    </div>
+                    <div class="academy-content">
+                      <p>Новичок в рядах Имперской Армии. Имеет право частично игнорировать правила RP-общения во время обучения.</p>
+
+                      <div class="warning-note">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Запрещено злоупотреблять статусом и портить RP-атмосферу!</p>
+                      </div>
+
+                      <div class="privileges">
+                        <h5>Особые права:</h5>
+                        <ul>
+                          <li>Задавать технические вопросы вне RP</li>
+                          <li>Уточнять непонятные моменты обучения</li>
+                          <li>Тренировать RP-навыки с инструктором</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Инструктор -->
+                  <div class="academy-block secondary">
+                    <div class="academy-header">
+                      <i class="fas fa-chalkboard-teacher"></i>
+                      <h3>Статус: Инструктор</h3>
+                    </div>
+                    <div class="academy-content">
+                      <div class="requirements">
+                        <h5>Требования:</h5>
+                        <ul>
+                          <li>Звание Мл. Сержант и выше</li>
+                          <li>Полное знание уставов</li>
+                          <li>Опыт службы не менее 2 недель</li>
+                        </ul>
+                      </div>
+
+                      <div class="responsibilities">
+                        <h5>Обязанности:</h5>
+                        <ul>
+                          <li>Проводить полный курс обучения</li>
+                          <li>Контролировать успеваемость</li>
+                          <li>Отчитываться о прогрессе кадета</li>
+                        </ul>
+                      </div>
+
+                      <div class="note">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Офицеры могут назначать инструкторов. В случае плохого обучения - ответственность несёт назначивший офицер.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Блок переобучения -->
+                <div class="academy-block accent">
+                  <div class="academy-header">
+                    <i class="fas fa-redo-alt"></i>
+                    <h3>Система переобучения</h3>
+                  </div>
+
+                  <div class="retraining-types">
+                    <!-- Добровольное -->
+                    <div class="retraining-card">
+                      <h4><i class="fas fa-user-edit"></i> Добровольное</h4>
+                      <p>Любой боец может пройти переобучение, если:</p>
+                      <ul>
+                        <li>Недостаточно усвоил курс ранее</li>
+                        <li>Инструктор плохо объяснил материал</li>
+                        <li>Хочет освежить знания</li>
+                      </ul>
+                      <div class="process">
+                        <p><strong>Процесс:</strong> Обращение к инструктору → Повторное обучение → Сохранение текущей должности</p>
+                      </div>
+                    </div>
+
+                    <!-- Принудительное -->
+                    <div class="retraining-card">
+                      <h4><i class="fas fa-gavel"></i> Принудительное</h4>
+                      <p>Применяется как мера наказания по решению трибунала:</p>
+                      <ul>
+                        <li>Понижение до кадета</li>
+                        <li>Полное переобучение</li>
+                        <li>Усиленный курс в своей структуре</li>
+                      </ul>
+                      <div class="process">
+                        <p><strong>Процесс:</strong> Понижение → Обучение → Повторное назначение рекрутом → Контроль командования</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Блок тестирования -->
+                <div class="exam-block">
+                  <div class="exam-header">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Система оценивания</h3>
+                  </div>
+
+                  <div class="exam-system">
+                    <div class="exam-criteria">
+                      <h4>Критерии оценки:</h4>
+                      <ul>
+                        <li>Ответ на вопрос - <strong>1 балл</strong></li>
+                        <li>Ответ на сложный вопрос - <strong>2 балла</strong></li>
+                      </ul>
+                    </div>
+
+                    <div class="exam-results">
+                      <div class="result-card success">
+                        <h5>Успешная сдача</h5>
+                        <p class="score">6+ баллов</p>
+                        <p>Допуск к выбору структуры</p>
+                      </div>
+
+                      <div class="result-card fail">
+                        <h5>Неудачная сдача</h5>
+                        <p class="score">Менее 6 баллов</p>
+                        <p>Повторное прохождение обучения</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== РЕГЛАМЕНТЫ ==================== -->
+          <div id="rules" class="tab-content">
+            <div class="content-section">
+              <h2>Регламенты</h2>
+              <p>Дополнительные правила и процедуры для конкретных подразделений и ситуаций.</p>
+            </div>
+          </div>
+
+          <!-- ==================== ДРОИДЫ ==================== -->
+  <div id="droids" class="tab-content">
+    <div class="content-section">
+      <h2>Дроиды</h2>
+      <p>Автоматизированные системы и роботы, используемые Империей.</p>
+    </div>
+
+    <div class="unit-section">
+      <div class="unit-image">
+        <img src="https://sun9-42.userapi.com/impg/YwxYAZVNfaA7t-WkCdk6dTPe7gRtxs9XkC_mTA/yUur0Cb7Kns.jpg?size=604x549&quality=96&sign=1eb9ad5e40831dfd4eacbcdc44c0761c&type=album" alt="Дроид-мышь">
+      </div>
+      <div class="unit-description">
+        <h3>ДРОИД-МЫШЬ</h3>
+        <p>Небольшой коробчатый колёсный дроид серии MSE, использовавшийся для технического обслуживания и питания.</p>
+        <p>Обычно дроиды-мыши выполняют функции уборки и ремонта, а также служат в сферах связи и безопасности. </p>
+      </div>
+    </div>
+
+    <div class="unit-section">
+      <div class="unit-image">
+        <img src="https://assetsfree.com/wp-content/uploads/2023/08/Star-Wars-Probe-Droid-Sculpture.webp" alt="Дроид-гадюка">
+      </div>
+      <div class="unit-description">
+        <h3>ДРОИД-ГАДЮКА</h3>
+        <p>Боевые развездывательные дроиды, замаскированные под обычные технические устройства. Активируются по сигналу и способны нейтрализовать цель с помощью бластерной пушки.</p>
+        <p>Часто используются для разведки, охраны, а также ликвидации конкретных целей.</p>
+      </div>
+    </div>
+
+    <div class="unit-section">
+      <div class="unit-image">
+        <img src="https://static.wikia.nocookie.net/starwars/images/4/47/Medical_droid_Alderaan.png/revision/latest?cb=20130513022806" alt="Меддроид 2-1B">
+      </div>
+      <div class="unit-description">
+        <h3>МЕДДРОИД 2-1B</h3>
+        <p>Специализированные медицинские дроиды, используемые в имперских госпиталях и полевых условиях. Оснащены полным набором хирургических инструментов и диагностическим оборудованием.</p>
+        <p>Способны проводить сложные операции.</p>
+      </div>
+    </div>
+
+    <div class="unit-section">
+      <div class="unit-image">
+        <img src="https://files.vgtimes.ru/posts/2023-02/thumbs/1675971630_6.webp" alt="DT-дроид">
+      </div>
+      <div class="unit-description">
+        <h3>DT-ДРОИД</h3>
+        <p>Имперские дроиды-часовые серии DT являются сторожевыми дроидами, которые использовались для защиты грузов, охраны важных лиц, а также для проведения боевых учений.</p>
+      </div>
+    </div>
+  </div>
+          <!-- ==================== МЕДИЦИНА ==================== -->
+          <div id="medicine" class="tab-content">
+            <div class="content-section">
+              <h2>Медицина Империи</h2>
+              <p>Передовые медицинские технологии и оборудование, используемые для поддержания боеспособности войск Империи.</p>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="https://readli.net/wp-content/images/2024/12/1318369/img_56" alt="Бакта-граната">
+              </div>
+              <div class="unit-description">
+                <h3>БАКТА-ГРАНАТА</h3>
+                <p>Тактическое медицинское устройство, распыляющее аэрозоль бакты в радиусе 5 метров. Обеспечивает экстренную медицинскую помощь в полевых условиях.</p>
+                <p>Особенно эффективна при массовых поражениях - останавливает кровотечения, дезинфицирует раны и снимает болевой шок.</p>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="https://static.wikia.nocookie.net/starwars/images/9/9f/Bacta_injector.png" alt="Бакта-инжектор">
+              </div>
+              <div class="unit-description">
+                <h3>БАКТА-ИНЖЕКТОР</h3>
+                <p>Портативное устройство для экстренного введения концентрированной бакты. Используется медиками на поле боя для стабилизации тяжелораненых.</p>
+                <p>Одна доза способна поддерживать жизнь раненого до 6 часов даже при критических повреждениях.</p>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="https://sun9-57.userapi.com/fq5B8OrTgsZ5kuk85lCatcSqfI6Qjnpvhnpd7A/KrZ56PP3bGQ.jpg" alt="Дефибриллятор">
+              </div>
+              <div class="unit-description">
+                <h3>ДЕФИБРИЛЛЯТОР</h3>
+                <p>Компактное устройство для реанимации, восстанавливающее сердечную деятельность. Оснащено интеллектуальной системой диагностики.</p>
+                <p>Автоматически анализирует состояние пациента и применяет оптимальный режим электроимпульсной терапии.</p>
+              </div>
+            </div>
+
+            <div class="unit-section">
+              <div class="unit-image">
+                <img src="https://static.wikia.nocookie.net/starwars/images/1/1c/Armor_repair_tool.png" alt="Инструмент починки броневых пластин">
+              </div>
+              <div class="unit-description">
+                <h3>ИНСТРУМЕНТ ПОЧИНКИ БРОНЕВЫХ ПЛАСТИН</h3>
+                <p>Специализированное устройство для ремонта боевой брони в полевых условиях. Позволяет быстро восстанавливать поврежденные участки брони без необходимости полной замены.</p>
+                <p>Оснащен плазменным сварочным аппаратом, молекулярным клеем и системой выравнивания пластин.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  <script>
+    function createStarfield() {
+      const starfield = document.getElementById('starfield');
+      const starCount = 200;
+
+      starfield.innerHTML = '';
+
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+
+        const size = Math.random() * 3;
+        const duration = 5 + Math.random() * 10;
+        const delay = Math.random() * 5;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.animationDuration = `${duration}s`;
+        star.style.animationDelay = `${delay}s`;
+        star.style.setProperty('--duration', `${duration}s`);
+
+        starfield.appendChild(star);
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const nebula = document.createElement('div');
+        nebula.className = 'nebula';
+
+        const size = 200 + Math.random() * 300;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const color = `hsl(${Math.random() * 60 + 200}, 70%, 50%)`;
+        const driftX = (Math.random() - 0.5) * 20;
+        const driftY = (Math.random() - 0.5) * 20;
+
+        nebula.style.width = `${size}px`;
+        nebula.style.height = `${size}px`;
+        nebula.style.left = `${x}%`;
+        nebula.style.top = `${y}%`;
+        nebula.style.background = color;
+        nebula.style.setProperty('--drift-x', `${driftX}px`);
+        nebula.style.setProperty('--drift-y', `${driftY}px`);
+        nebula.style.animationDuration = `${30 + Math.random() * 30}s`;
+
+        starfield.appendChild(nebula);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      createStarfield();
+
+      // Изначально скрываем группы меню
+      document.getElementById('newbiesItems').classList.add('collapsed');
+      document.getElementById('formationsItems').classList.add('collapsed');
+      document.getElementById('docsItems').classList.add('collapsed');
+
+      // Для анимации шагов академии
+      const steps = document.querySelectorAll('.step');
+      steps.forEach(step => {
+        step.style.opacity = '0';
+        step.style.transform = 'translateY(20px)';
+        step.style.transition = 'all 0.5s ease';
+      });
+
+      setTimeout(() => {
+        steps.forEach((step, index) => {
+          setTimeout(() => {
+            step.style.opacity = '1';
+            step.style.transform = 'translateY(0)';
+          }, index * 200);
+        });
+      }, 500);
+    });
+
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const openMenuBtn = document.getElementById('openMenuBtn');
+
+    function checkScreenSize() {
+      if (window.innerWidth <= 992) {
+        sidebar.classList.add('hidden');
+        openMenuBtn.style.display = 'flex';
+      } else {
+        sidebar.classList.remove('hidden', 'collapsed');
+        openMenuBtn.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', checkScreenSize);
+    checkScreenSize();
+
+    toggleBtn.addEventListener('click', () => {
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('collapsed');
+        openMenuBtn.style.display = 'none';
+      } else if (sidebar.classList.contains('collapsed')) {
+        sidebar.classList.remove('collapsed');
+      } else {
+        sidebar.classList.add('hidden');
+        openMenuBtn.style.display = 'flex';
+      }
+    });
+
+    openMenuBtn.addEventListener('click', () => {
+      sidebar.classList.remove('hidden', 'collapsed');
+      openMenuBtn.style.display = 'none';
+    });
+
+    // Навигация по вкладкам в боковом меню
+    document.querySelectorAll('.sidebar-menu li[data-tab]').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-menu li').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        const targetTab = document.getElementById(item.dataset.tab);
+        if (targetTab) {
+          targetTab.classList.add('active');
+        }
+        if (window.innerWidth <= 992) {
+          sidebar.classList.add('hidden');
+          openMenuBtn.style.display = 'flex';
+        }
+      });
+    });
+
+
+    // Обработчики разворачивания меню-групп
+    document.getElementById('newbiesHeader').addEventListener('click', function () {
+      const items = document.getElementById('newbiesItems');
+      const arrow = this.querySelector('.menu-arrow');
+      items.classList.toggle('collapsed');
+      arrow.style.transform = items.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+
+    document.getElementById('formationsHeader').addEventListener('click', function () {
+      const items = document.getElementById('formationsItems');
+      const arrow = this.querySelector('.menu-arrow');
+      items.classList.toggle('collapsed');
+      arrow.style.transform = items.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+
+    document.getElementById('docsHeader').addEventListener('click', function () {
+      const items = document.getElementById('docsItems');
+      const arrow = this.querySelector('.menu-arrow');
+      items.classList.toggle('collapsed');
+      arrow.style.transform = items.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+
+    // Новый обработчик для Лор
+    document.getElementById('lorHeader').addEventListener('click', function () {
+      const items = document.getElementById('lorItems');
+      const arrow = this.querySelector('.menu-arrow');
+      items.classList.toggle('collapsed');
+      arrow.style.transform = items.classList.contains('collapsed') ? 'rotate(0deg)' : 'rotate(180deg)';
+    });
+
+    // Навигация по вкладкам в боковом меню
+    document.querySelectorAll('.sidebar-menu li[data-tab]').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-menu li').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        const targetTab = document.getElementById(item.dataset.tab);
+        if (targetTab) {
+          targetTab.classList.add('active');
+        }
+        if (window.innerWidth <= 992) {
+          sidebar.classList.add('hidden');
+          openMenuBtn.style.display = 'flex';
+        }
+      });
+    });
+
+    // Управление разворачиванием специальных разделов (глобальные специализации)
+    document.querySelectorAll('.specialization-header').forEach(header => {
+      header.addEventListener('click', function () {
+        const content = this.nextElementSibling;
+        const arrow = this.querySelector('.specialization-arrow');
+        content.classList.toggle('expanded');
+        arrow.style.transform = content.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+      });
+    });
+
+    // Новый обработчик для раскрытия специализаций штурмовиков
+    document.querySelectorAll('.trooper-header').forEach(header => {
+      header.addEventListener('click', function () {
+        const content = this.nextElementSibling;
+        const arrow = this.querySelector('.trooper-arrow');
+        content.classList.toggle('expanded');
+        arrow.style.transform = content.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+      });
+    });
+
+    // При загрузке страницы закрываем все специализации
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.specialization-content').forEach(content => {
+        content.classList.remove('expanded');
+      });
+      document.querySelectorAll('.specialization-arrow').forEach(arrow => {
+        arrow.style.transform = 'rotate(0deg)';
+      });
+      // Закрываем все trooper-content
+      document.querySelectorAll('.trooper-content').forEach(content => {
+        content.classList.remove('expanded');
+      });
+      document.querySelectorAll('.trooper-arrow').forEach(arrow => {
+        arrow.style.transform = 'rotate(0deg)';
+      });
+    });
+
+    // Навигация внутри регламентов
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function () {
+        document.querySelectorAll('.nav-item').forEach(el => {
+          el.classList.remove('active');
+        });
+        this.classList.add('active');
+
+        document.querySelectorAll('.regulation-section').forEach(section => {
+          section.classList.remove('active');
+        });
+
+        const sectionId = this.dataset.section;
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.classList.add('active');
+        }
+      });
+    });
+
+    // Инициализация: кликать по первому nav-item, если найден
+    document.addEventListener('DOMContentLoaded', function () {
+      const firstNavItem = document.querySelector('.nav-item');
+      if (firstNavItem) {
+        firstNavItem.click();
+      }
+    });
+
+    // Поведение для карточек переобучения в академии
+    const retrainingCards = document.querySelectorAll('.retraining-card');
+    retrainingCards.forEach(card => {
+      card.addEventListener('click', function () {
+        retrainingCards.forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+    </body>
+    </html>
